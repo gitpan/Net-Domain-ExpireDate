@@ -1,5 +1,8 @@
 Revision history for Perl extension ExpireDate.
 
+0.03  Mon Jan 13 11:11:56 2003
+	- fixed parsing of whois results of whois.bulkregister.com
+
 0.01  Wed Oct  2 14:40:35 2002
 	- original version; created by h2xs 1.21 with options
 		-A -n ExpireDate

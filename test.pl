@@ -2,7 +2,7 @@
 
 use Test;
 use Data::Dumper;
-BEGIN { plan tests => 42 };
+BEGIN { plan tests => 47 };
 
 use Net::Domain::ExpireDate;
 ok(1); # If we made it this far, we're ok.
@@ -46,6 +46,12 @@ ok( expdate_fmt("\nExpires on 11/26/2007 23:00:00\n"), '2007-11-26' );
 ok( expdate_fmt("\nRecord expires on 2010-Apr-03\n"), '2010-04-03' );
 ok( expdate_fmt("\nExpires on..............: 2006-Jun-12\n"), '2006-06-12' );
 ok( expdate_fmt("\nExpiration date: 09/21/03 13:45:09\n"), '2003-09-21' );
+# whois.bulkregister.com can give expiration date in different formats
+ok( expdate_fmt("\nRecord expires on 2003-04-25\n"), '2003-04-25' );
+ok( expdate_fmt("\nRecord will be expiring on date: 2003-04-25\n"), '2003-04-25' );
+ok( expdate_fmt("\nRecord expiring on -  2003-04-25\n"), '2003-04-25' );
+ok( expdate_fmt("\nRecord will expire on -  2003-04-25\n"), '2003-04-25' );
+ok( expdate_fmt("\nRecord will be expiring on date: 2003-04-25\n"), '2003-04-25' );
 
 # .ru tests
 

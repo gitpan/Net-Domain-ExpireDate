@@ -9,7 +9,7 @@ use vars qw(@ISA @EXPORT $VERSION);
 
 @ISA = qw(Exporter);
 @EXPORT = qw( expire_date expdate_fmt expdate_int howmany_days_passed );
-$VERSION = '0.02';
+$VERSION = '0.03';
 
 # for Net::Whois::Raw
 $OMIT_MSG = 2;
@@ -85,7 +85,7 @@ sub expdate_int_cno {
     # $m - The month number (1-12)
     # $b - The month name
     # $d - The day of month (1-31)
-    my ($rulenum, $Y, $y, $m, $b, $d) = @_;
+    my ($rulenum, $Y, $y, $m, $b, $d);
 
     # [whois.networksolutions.com]	Record expires on 27-Apr-2011.
     # [whois.opensrs.net]
@@ -100,7 +100,11 @@ sub expdate_int_cno {
     # [whois.discount-domain.com]	Expiration Date: 02-Aug-2003 22:07:21
     } elsif ($whois =~ m/Expiration Date: (\d{2})-(\w{3})-(\d{4})/s) {
 	$rulenum = 1.2;	$d = $1; $b = $2; $Y = $3;
-    # [whois.bulkregister.com]		Record expires on 2003-09-08
+    # [whois.bulkregister.com]		Record expires on 2003-04-25
+    # [whois.bulkregister.com]		Record will be expiring on date: 2003-04-25
+    # [whois.bulkregister.com]		Record expiring on -  2003-04-25
+    # [whois.bulkregister.com]		Record will expire on -  2003-04-25
+    # [whois.bulkregister.com]		Record will be expiring on date: 2003-04-25
     # [whois.eastcom.com]
     # [whois.corenic.net]		Record expires:       2003-07-29 10:45:05 UTC
     # [whois.gandi.net]			expires:        2003-05-21 10:09:56
@@ -111,7 +115,7 @@ sub expdate_int_cno {
     # [whois.totalnic.net]		Record expires on 2010-04-24 16:03:20+10
     # [whois.signaturedomains.com]	Expires on: 2003-11-05
     # [whois.1stdomain.net]		Domain expires: 2007-01-20.
-    } elsif ($whois =~ m&(?:Record |Domain )?expire(?:d|s)?(?: on)?\.*:?\s+(\d{4})[/-](\d{1,2})[/-](\d{2})&is) {
+    } elsif ($whois =~ m&(?:Record |Domain )?(?:will )?(?:be )?expir(?:e|ed|es|ing)(?: on)?(?: date)?\s*[-:]?\s+(\d{4})[/-](\d{1,2})[/-](\d{2})&is) {
 	$rulenum = 2.1;	$Y = $1; $m = $2; $d = $3;
     # [whois.InternetNamesWW.com]	Expiry Date.......... 2009-06-16
     # [whois.aitdomains.com]		Expire on................ 2002-11-05 16:42:41.000
@@ -157,10 +161,10 @@ sub expdate_int_cno {
     }
 
     unless ($rulenum) {
-	warn "Can't recognise date format";
+	warn "Can't recognise date format\n";
 	return undef;
     } else {
-	#warn "rulenum: $rulenum\n";
+	warn "rulenum: $rulenum\n";
     };
 
     my ($fstr, $dstr) = ('', '');
@@ -279,12 +283,14 @@ all gTLD registrars and some ccTLD registrars are covered). If an
 expiration date format is unknown to Net::Domain::ExpireDate - then
 heuristics is used to determine expiration date.
 
+"$date" in synopsis is an object of type L<Time::Piece>.
+
 =head1 AUTHOR
 
 Walery Studennikov, E<lt>despair@regtime.netE<gt>
 
 =head1 SEE ALSO
 
-L<Net::Whois::Raw>.
+L<Net::Whois::Raw>, L<Time::Piece>.
 
 =cut
