@@ -9,7 +9,7 @@ use vars qw(@ISA @EXPORT $VERSION);
 
 @ISA = qw(Exporter);
 @EXPORT = qw( expire_date expdate_fmt expdate_int howmany_days_passed );
-$VERSION = '0.04';
+$VERSION = '0.05';
 
 # for Net::Whois::Raw
 $OMIT_MSG = 2;
@@ -285,9 +285,39 @@ heuristics is used to determine expiration date.
 
 "$date" in synopsis is an object of type L<Time::Piece>.
 
+=head1 FUNCTIONS
+
+=over 4
+
+=item expire_date( DOMAIN [,FORMAT] )
+
+Returns expiration date of C<DOMAIN>.
+Without C<FORMAT> argument returns L<Time::Piece> object.
+With C<FORMAT> argument returns date formatted using C<FORMAT> template.
+See L<strftime> man page for C<FORMAT> specification.
+
+=item expdate_int( WHOISTEXT [,TLD] )
+
+Extracts expiration date of domain in TLD from C<WHOISTEXT>.
+If no TLD is given 'com' is the default. There is no
+distinction between 'com', 'net' or 'org' TLDs in this function -
+all of them means gTLD. Also 'ru' TLD is suppored.
+Returns L<Time::Piece> object.
+
+With C<FORMAT> argument returns date formatted using C<FORMAT> template
+(see L<strftime> man page for C<FORMAT> specification)
+
+=item expdate_fmt( WHOISTEXT [,TLD [,FORMAT]]  )
+
+Similar to expdate_int except that output value is formatted date.
+If no C<FORMAT> specified, '%Y-%m-%d' is assumed.
+See L<strftime> man page for C<FORMAT> specification.
+
+=back
+
 =head1 AUTHOR
 
-Walery Studennikov, E<lt>despair@regtime.netE<gt>
+Walery Studennikov, <despair@regtime.net>
 
 =head1 SEE ALSO
 

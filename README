@@ -1,52 +1,59 @@
-Net::Domain::ExpireDate version 0.01
+Net::Domain::ExpireDate version 0.05
 ====================================
 
 NAME
-
-Net::Domain::ExpireDate - Perl extension for obtaining expiration date
-of domain names
+    Net::Domain::ExpireDate - Perl extension for obtaining expiration date
+    of domain names
 
 SYNOPSIS
+     use Net::Domain::ExpireDate;
 
-use Net::Domain::ExpireDate;
-
-$date = expire_date( 'microsoft.com' );
-$str  = expire_date( 'microsoft.com', '%Y-%m-%d' );
-$date = expdate_int( $whois_text, 'com' );
-$str  = expdate_fmt( $whois_text, 'ru', '%Y-%m-%d' );
+     $date = expire_date( 'microsoft.com' );
+     $str  = expire_date( 'microsoft.com', '%Y-%m-%d' );
+     $date = expdate_int( $whois_text, 'com' );
+     $str  = expdate_fmt( $whois_text, 'ru', '%Y-%m-%d' );
 
 DESCRIPTION
+    Net::Domain::ExpireDate gets WHOIS information of given domain using
+    Net::Whois::Raw and tries to obtain expiration date of domain.
+    Unfortunately there are too many different whois servers which provides
+    whois info in very different formats. Net::Domain::ExpireDate knows more
+    than 40 different formats of expiration date representation provided by
+    different servers (almost all gTLD registrars and some ccTLD registrars
+    are covered). If an expiration date format is unknown to
+    Net::Domain::ExpireDate - then heuristics is used to determine
+    expiration date.
 
-Net::Domain::ExpireDate gets WHOIS information of given domain using
-Net::Whois::Raw and tries to obtain expiration date of domain.
-Unfortunately there are too many different whois servers which provides
-whois info in very different formats.
-Net::Domain::ExpireDate knows more than 40 different formats of
-expiration date representation provided by different servers (almost
-all gTLD registrars and some ccTLD registrars are covered). If an
-expiration date format is unknown to Net::Domain::ExpireDate - then
-heuristics is used to determine expiration date.
+    "$date" in synopsis is an object of type Time::Piece.
 
+FUNCTIONS
+    expire_date( DOMAIN [,FORMAT] )
+        Returns expiration date of "DOMAIN". Without "FORMAT" argument
+        returns Time::Piece object. With "FORMAT" argument returns date
+        formatted using "FORMAT" template. See strftime man page for
+        "FORMAT" specification.
 
-INSTALLATION
+    expdate_int( WHOISTEXT [,TLD] )
+        Extracts expiration date of domain in TLD from "WHOISTEXT". If no
+        TLD is given 'com' is the default. There is no distinction between
+        'com', 'net' or 'org' TLDs in this function - all of them means
+        gTLD. Also 'ru' TLD is suppored. Returns Time::Piece object.
 
-To install this module type the following:
+        With "FORMAT" argument returns date formatted using "FORMAT"
+        template (see strftime man page for "FORMAT" specification)
 
-   perl Makefile.PL
-   make
-   make test
-   make install
+    expdate_fmt( WHOISTEXT [,TLD [,FORMAT]] )
+        Similar to expdate_int except that output value is formatted date.
+        If no "FORMAT" specified, '%Y-%m-%d' is assumed. See strftime man
+        page for "FORMAT" specification.
 
-DEPENDENCIES
+AUTHOR
+    Walery Studennikov, <despair@regtime.net>
 
-Time::Piece
-Net::Whois::Raw
+SEE ALSO
+    Net::Whois::Raw, Time::Piece.
 
-COPYRIGHT AND LICENCE
-
-This module is free software; you can redistribute it
-and/or modify it under the same terms as Perl itself.
-	      
+=====================================
 
 RECOGNIZED FORMATS OF EXPIRATION DATE
 
