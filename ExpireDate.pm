@@ -8,9 +8,9 @@ use Net::Whois::Raw qw(whois $OMIT_MSG $CHECK_FAIL);
 use vars qw(@ISA @EXPORT @EXPORT_OK $VERSION);
 
 @ISA = qw(Exporter);
-@EXPORT = qw( expire_date expdate_fmt expdate_int  howmany_days_passed );
+@EXPORT = qw( expire_date expdate_fmt expdate_int );
 @EXPORT_OK = qw( decode_date );
-$VERSION = '0.15';
+$VERSION = '0.16';
 
 # for Net::Whois::Raw
 $OMIT_MSG = 2; $CHECK_FAIL = 2;
@@ -50,13 +50,6 @@ sub expdate_int {
     } else {
 	return expdate_int_cno( $whois );
     }
-}
-
-sub howmany_days_passed {
-    my ($time) = @_;
-    my $now = localtime();
-    my $seconds = $now - $time;
-    return int( $seconds / ONE_DAY );
 }
 
 # --- internal functions ----
@@ -196,7 +189,7 @@ sub expdate_int_ru {
     while ($whois =~ /free-date:(.+?)\n/gs) { pushstate(\@states, "free-date: $1") };
     my $res = join( '; ', @states );
 
-    my ($reg_till, $free_date, $active);
+    my ($reg_till, $free_date, $active, $created);
 
     # ON-HOLD domains
     if ($res =~ /NOT DELEGATED; reg-till:\s+([0-9.]+); free-date:\s+([0-9.]+)/) {
@@ -230,6 +223,20 @@ sub expdate_int_ru {
     } else {
 	warn "Unknown record: $res\n";
 	return undef;
+    }
+
+    if ($whois =~ /created:\s+([0-9.]+)\n/gs) {
+	($created = $1) =~ tr/./-/;
+
+	# ”гадаем дату reg-till
+	my $t = decode_date( $created, '%Y-%m-%d' );
+	if ($t && !$reg_till && !$free_date) {
+	    $t += 0;
+	    while ($t < localtime()) {
+		$t += ONE_YEAR + ($t->is_leap_year() ? 1 : 0);
+	    }
+	    $reg_till = $t->strftime( '%Y-%m-%d' );
+	}
     }
 
     unless ( $reg_till || $free_date ) {
