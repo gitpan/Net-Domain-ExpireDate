@@ -1,5 +1,8 @@
 Revision history for Perl extension Net::Domain::ExpireDate.
 
+0.21 2003-Aug-25
+	- new patterns for whois.enom.com by "Ahmed Akef" <akef@aucegypt.edu>
+
 0.20 2003-Aug-11
 	- major change for .com .net .org domains:
 	  extract expiration date from

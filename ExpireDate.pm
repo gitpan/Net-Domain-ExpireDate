@@ -10,7 +10,7 @@ use vars qw(@ISA @EXPORT @EXPORT_OK $VERSION $USE_REGISTRAR_SERVERS);
 @ISA = qw(Exporter);
 @EXPORT = qw( expire_date expdate_fmt expdate_int );
 @EXPORT_OK = qw( decode_date );
-$VERSION = '0.20';
+$VERSION = '0.21';
 
 $USE_REGISTRAR_SERVERS = 0; # Don't make direct queries to registrar server
 
@@ -164,8 +164,16 @@ sub expdate_int_cno {
     # [whois.enom.com]			Expiration date: 09/21/03 13:45:09
     } elsif ($whois =~ m|Expiration date: (\d{2})/(\d{2})/(\d{2})|s) {
 	$rulenum = 7;	$m = $1; $d = $2; $y = $3;
-    } elsif ($whois =~ m|Expiration date: (\d{2})/(\d{2})/(\d{2})|s) {
-	$rulenum = 7;	$m = $1; $d = $2; $y = $3;
+    } elsif ($whois =~ m/Registered through- (\w{3}) (\w{3}) (\d{2}) (\d{4})/is) {
+	$rulenum = 7.1; $b = $2; $d = $3; $Y = $4;
+    } elsif ($whois =~ m|Expires: (\d{2})/(\d{2})/(\d{2})|is) {
+	$rulenum = 7.2;	$m = $1; $d = $2; $y = $3;
+    } elsif ($whois =~ m|Registered through- (\d{2})/(\d{2})/(\d{2})|is) {
+	$rulenum = 7.3; $m = $1; $d = $2; $y = $3;
+    } elsif ($whois =~ m/Expiration date: (\w{3}) (\w{3}) (\d{2}) (\d{4})/is) {
+	$rulenum = 7.4; $b = $2; $d = $3; $Y = $4;
+    } elsif ($whois =~ m/Expires: (\w{3}) (\w{3}) (\d{2}) (\d{4})/is) {
+	$rulenum = 7.5; $b = $2; $d = $3; $Y = $4;
     }
 
     unless ($rulenum) {
