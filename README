@@ -1,0 +1,183 @@
+Net::Domain::ExpireDate version 0.01
+====================================
+
+NAME
+
+Net::Domain::ExpireDate - Perl extension for obtaining expiration date
+of domain names
+
+SYNOPSIS
+
+use Net::Domain::ExpireDate;
+
+$date = expire_date( 'microsoft.com' );
+$str  = expire_date( 'microsoft.com', '%Y-%m-%d' );
+$date = expdate_int( $whois_text, 'com' );
+$str  = expdate_fmt( $whois_text, 'ru', '%Y-%m-%d' );
+
+DESCRIPTION
+
+Net::Domain::ExpireDate gets WHOIS information of given domain using
+Net::Whois::Raw and tries to obtain expiration date of domain.
+Unfortunately there are too many different whois servers which provides
+whois info in very different formats.
+Net::Domain::ExpireDate knows more than 40 different formats of
+expiration date representation provided by different servers (almost
+all gTLD registrars and some ccTLD registrars are covered). If an
+expiration date format is unknown to Net::Domain::ExpireDate - then
+heuristics is used to determine expiration date.
+
+
+INSTALLATION
+
+To install this module type the following:
+
+   perl Makefile.PL
+   make
+   make test
+   make install
+
+DEPENDENCIES
+
+Time::Piece
+Net::Whois::Raw
+
+COPYRIGHT AND LICENCE
+
+This module is free software; you can redistribute it
+and/or modify it under the same terms as Perl itself.
+	      
+
+RECOGNIZED FORMATS OF EXPIRATION DATE
+
+[whois.networksolutions.com]
+[whois.opensrs.net]
+[whois.easyspace.com]
+[whois.namesdirect.com]
+[whois.dotregistrar.com]
+Record expires on 27-Apr-2011.
+
+[whois.bulkregister.com]
+[whois.eastcom.com]
+Record expire(?:d|s) on 2003-09-08
+
+[whois.dotster.com]
+Expires on: 12-DEC-05
+
+[whois.register.com]
+Expires on..............: Tue, Aug 04, 2009
+
+[rs.domainbank.net]
+Record expires on 10-05-2003 11:21:25 AM
+
+[whois.corenic.net]
+Record expires:       2003-07-29 10:45:05 UTC
+
+[whois.InternetNamesWW.com]
+Expiry Date.......... 2009-06-16
+
+[whois.nordnet.net]
+Record expires on 2010-Apr-03
+
+[whois.namesecure.com]
+Expires on 10-09-2011
+
+[whois.registrar.aol.com]
+Expires on..............: Oct  5 2002 12:00AM
+
+[whois.itsyourdomain.com]
+Record expires on March 06, 2011
+
+[whois.enom.com]
+Expiration date: 09/21/03 13:45:09
+
+[whois.domaininfo.com]
+Domain expires: 24 Oct 2010
+
+[whois.aitdomains.com]
+Expire on................ 2002-11-05 16:42:41.000
+
+[whois.yesnic.com]
+Valid Date     2010-11-02 05:21:35 EST
+
+[whois.gandi.net]
+expires:        2003-05-21 10:09:56
+
+[whois.dotearth.com]
+Record expires on:       2010-04-07 00:00:00.0 ET
+
+[whois.names4ever.com]
+Record expires on 2012-07-15 10:23:10.000
+
+[whois.doregi.com]
+Record expires on.......: Oct  28, 2011
+
+[whois.ibi.net]
+Record expires on........: 03-Jun-2005 EST.
+
+[whois.OnlineNIC.com]
+Record expired on 2008/8/26
+
+[whois.domainpeople.com]
+Expires on .............WED NOV 16 09:09:52 2011
+
+[whois.awregistry.net]
+Record expires on Wed May 19 19:19:38 2004 MDT.
+
+[whois.discount-domain.com]
+Expiration Date: 02-Aug-2003 22:07:21
+
+[whois.psi-domains.com]
+Record expires on 07-26-2002 12:00:00 AM
+
+[whois.gkg.net]
+Expires on..............: 24-JAN-2003
+
+[whois.enetregistry.net]
+Expiration Date     : 2002-11-19 04:18:25-05
+
+[whois.ascio.net]
+Record expires:           2003-03-12 12:16:45
+
+[whois.catalog.com]
+Record Expires on 08-24-2011
+
+[whois.oleane.net]
+expires:        20030803
+
+[whois.totalnic.net]
+Record expires on 2010-04-24 16:03:20+10
+
+[whois.alldomains.com]
+Expires on..............: 2006-Jun-12
+
+[whois.signaturedomains.com]
+Expires on: 2003-11-05
+
+[whois.1stdomain.net]
+Domain expires: 2007-01-20.
+
+[whois.enterprice.net]
+Date of expiration  : 2003-05-28 11:50:58
+
+[whois.stargateinc.com]
+Expiration: 6/3/2004
+
+[whois.e-names.org]
+Expires after:   Mon Jun  9 23:59:59 2003
+
+[nswhois.domainregistry.com]
+Expires on..............: 2006-07-24
+
+[whois.bookmyname.com]
+Expires on 11/26/2007 23:00:00
+
+[whois.domaindiscover.com]
+[whois.parava.net]
+[whois.domainzoo.com]
+/no connection/
+
+[whois.ripn.net]
+reg-till: 2003.09.20
+ or
+state:   Delegated till 2003.10.01
