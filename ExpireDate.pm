@@ -11,7 +11,7 @@ use vars qw(@ISA @EXPORT $VERSION);
 @EXPORT = qw(
     expire_date expdate_fmt expdate_int decode_date howmany_days_passed
 );
-$VERSION = '0.12';
+$VERSION = '0.13';
 
 # for Net::Whois::Raw
 $OMIT_MSG = 2;
@@ -23,7 +23,7 @@ sub expire_date {
     return undef unless ($domain =~ /(.+?)\.([^.]+)$/);
     my ($name, $tld) = ($1, $2);
 
-    my $whois = whois( $domain );
+    my $whois = Net::Whois::Raw::whois( $domain );
 
     if ($format) {
 	return expdate_fmt( $whois, $tld, $format );

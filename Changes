@@ -1,5 +1,8 @@
 Revision history for Perl extension Net::Domain::ExpireDate.
 
+0.13 2003-May-11
+	- more fixes regarding new Net::Whois::Raw
+
 0.12 2003-May-11
 	- adopted to new version Net::Whois::Raw
 	  (explicitly importing $OMIT_MSG $CHECK_FAIL)
