@@ -5,13 +5,12 @@ use strict;
 use Time::Seconds;
 use Time::Piece;
 use Net::Whois::Raw qw(whois $OMIT_MSG $CHECK_FAIL);
-use vars qw(@ISA @EXPORT $VERSION);
+use vars qw(@ISA @EXPORT @EXPORT_OK $VERSION);
 
 @ISA = qw(Exporter);
-@EXPORT = qw(
-    expire_date expdate_fmt expdate_int decode_date howmany_days_passed
-);
-$VERSION = '0.14';
+@EXPORT = qw( expire_date expdate_fmt expdate_int  howmany_days_passed );
+@EXPORT_OK = qw( decode_date );
+$VERSION = '0.15';
 
 # for Net::Whois::Raw
 $OMIT_MSG = 2; $CHECK_FAIL = 2;
