@@ -9,7 +9,7 @@ use vars qw(@ISA @EXPORT $VERSION);
 
 @ISA = qw(Exporter);
 @EXPORT = qw( expire_date expdate_fmt expdate_int howmany_days_passed );
-$VERSION = '0.06';
+$VERSION = '0.07';
 
 # for Net::Whois::Raw
 $OMIT_MSG = 2;
@@ -195,24 +195,24 @@ sub expdate_int_ru {
     my ($reg_till, $free_date, $active);
 
     # ON-HOLD domains
-    if ($res =~ /NOT DELEGATED; reg-till: ([0-9.]+); free-date: ([0-9.]+)/) {
+    if ($res =~ /NOT DELEGATED; reg-till:\s+([0-9.]+); free-date:\s+([0-9.]+)/) {
 	$active = 0;
 	($reg_till = $1) =~ tr/./-/;
 	($free_date = $2) =~ tr/./-/;
     } elsif ($res =~ /NOT DELEGATED; reg-till: ([0-9.]+)/i) {
 	$active = 0;
 	($reg_till = $1) =~ tr/./-/;
-    } elsif ($res =~ /Not delegated; (?:freeing date -|free-date:) ([0-9.]+)/i) {
+    } elsif ($res =~ /Not delegated; (?:freeing date -|free-date:)\s+([0-9.]+)/i) {
 	$active = 0;
 	($free_date = $1) =~ tr/./-/;
     } elsif ($res =~ /Not delegated/i) {
 	$active = 0;
     # ACTIVE DOMAINS
-    } elsif ($res =~ /reg-till: ([0-9.]+); free-date: ([0-9.]+)/) {
+    } elsif ($res =~ /reg-till:\s+([0-9.]+); free-date:\s+([0-9.]+)/) {
 	$active = 1;
 	($reg_till = $1) =~ tr/./-/;
 	($free_date = $2) =~ tr/./-/;
-    } elsif ($res =~ /reg-till: ([0-9.]+)/) {
+    } elsif ($res =~ /reg-till:\s+([0-9.]+)/) {
 	$active = 1;
 	($reg_till = $1) =~ tr/./-/;
     } elsif ($res =~ /Delegated till ([0-9.]+)/) {

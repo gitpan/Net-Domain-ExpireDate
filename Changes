@@ -1,5 +1,8 @@
 Revision history for Perl extension Net::Domain::ExpireDate.
 
+0.07 2003-Feb-17
+	- fixed parsing of whois results of whois.ripn.net
+
 0.06 2003-Feb-14
 	- documendation update: added functions reference
 
