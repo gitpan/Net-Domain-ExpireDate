@@ -85,3 +85,6 @@ Revision history for Perl extension Net::Domain::ExpireDate.
 
 0.32 2005-Feb-26
 	- more creation date patterns;
+
+0.33 2005-Mar-03
+	- more creation and expiration date patterns;

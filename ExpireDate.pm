@@ -17,7 +17,7 @@ use constant FLG_ALL     => 0b1111;
     $USE_REGISTRAR_SERVERS
 );
 @EXPORT_OK = qw( decode_date );
-$VERSION = '0.32';
+$VERSION = '0.33';
 
 $USE_REGISTRAR_SERVERS = 0;
 # 0 - make queries to registry server
@@ -237,12 +237,15 @@ sub expdate_int_cno {
     # [whois.psi-domains.com]
     # [whois.namesecure.com]		Expires on 10-09-2011
     # [whois.catalog.com]		Record Expires on 08-24-2011
-    } elsif ($whois =~ m&(?:Record |Domain )?expire(?:d|s) on (\d{2})-(\d{2})-(\d{4})&is) {
+    } elsif ($whois =~ m&expires.+?(\d{2})-(\d{2})-(\d{4})&is) {
 	$rulenum = 5.1;	$m = $1; $d = $2; $Y = $3;
     # [whois.stargateinc.com]		Expiration: 6/3/2004
     # [whois.bookmyname.com]		Expires on 11/26/2007 23:00:00
     } elsif ($whois =~ m&(?:Expiration|Expires on):? (\d{1,2})[-/](\d{1,2})[-/](\d{4})&is) {
 	$rulenum = 5.2;	$m = $1; $d = $2; $Y = $3;
+    # [whois.belizenic.bz]		Expiration Date..: 15-01-2005 12:00:00
+    } elsif ($whois =~ m&Expiration Date.+?(\d{2})-(\d{2})-(\d{4}) \d{2}:\d{2}:\d{2}&is) {
+	$rulenum = 5.3;	$d = $1; $m = $2; $Y = $3;
     # [whois.nordnet.net]		Record expires on 2010-Apr-03
     # [whois.alldomains.com]		Expires on..............: 2006-Jun-12
     } elsif ($whois =~ m/(?:Record |Domain )?expires on\.*:? (\d{4})-(\w{3})-(\d{2})/is) {
@@ -302,6 +305,9 @@ sub credate_int_cno {
     # [whois.nic.it]			created:     20000421
     } elsif ($whois =~ m/created?:\s+(\d{4})(\d{2})(\d{2})/is) {
 	$rulenum = 2.3;	$Y = $1; $m = $2; $d = $3;
+    # [whois.relcom.net]		changed:      support@webnames.ru 20030815
+    } elsif ($whois =~ m/changed:.+?(\d{4})(\d{2})(\d{2})/is) {
+	$rulenum = 2.4;	$Y = $1; $m = $2; $d = $3;
     # [whois.tv]			Record created on Feb 21 2001.
     } elsif ($whois =~ m/Creat.+?:?\s*(?:\w{3}, )?(\w{3,9})\s{1,2}(\d{1,2}),? (\d{4})/is) {
 	$rulenum = 4.1;	$b = $1; $d = $2; $Y = $3;
@@ -311,6 +317,11 @@ sub credate_int_cno {
     # [whois.whois.neulevel.biz]	Domain Registration Date: Wed Mar 27 00:01:00 GMT 2002
     } elsif ($whois =~ m/Registration.*?:\s+\w{3} (\w{3}) (\d{2}) (?:\d{2}:\d{2}:\d{2} \w{3}(?:[-+]\d{2}:\d{2})? )?(\d{4})/is) {
 	$rulenum = 4.3; $b = $1; $d = $2; $Y = $3;
+    } elsif ($whois =~ m&created.+?(\d{2})-(\d{2})-(\d{4})&is) {
+	$rulenum = 5.1;	$m = $1; $d = $2; $Y = $3;
+    # [whois.belizenic.bz]		Creation Date....: 15-01-2003 05:00:00
+    } elsif ($whois =~ m&Creation Date.+?(\d{2})-(\d{2})-(\d{4}) \d{2}:\d{2}:\d{2}&is) {
+	$rulenum = 5.3;	$d = $1; $m = $2; $Y = $3;
     } else {
 	warn "Can't recognise creation date format\n";
 	return undef;
