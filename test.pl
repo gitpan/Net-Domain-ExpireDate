@@ -14,6 +14,9 @@ ok(1); # If we made it this far, we're ok.
 
 print "expiration date tests\n";
 
+print join ';', domain_dates("infocentr.ru", '%Y-%m-%d'), "\n";
+exit;
+
 print " .com .net .org tests\n";
 ok( expdate_fmt("\nRecord expires on 27-Apr-2011.\n"), '2011-04-27' );
 ok( expdate_fmt("\nDomain expires: 24 Oct 2010\n"), '2010-10-24' );

@@ -88,3 +88,6 @@ Revision history for Perl extension Net::Domain::ExpireDate.
 
 0.33 2005-Mar-03
 	- more creation and expiration date patterns;
+
+0.34 2005-Apr-05
+	- improved obtaining expiration date of .ru domains

@@ -17,7 +17,7 @@ use constant FLG_ALL     => 0b1111;
     $USE_REGISTRAR_SERVERS
 );
 @EXPORT_OK = qw( decode_date );
-$VERSION = '0.33';
+$VERSION = '0.34';
 
 $USE_REGISTRAR_SERVERS = 0;
 # 0 - make queries to registry server
@@ -350,11 +350,11 @@ sub dates_int_ru {
     my ($reg_till, $free_date, $created);
 
     if ($whois =~ /reg-till:\s*(.+?)\n/s) { $reg_till = $1; }
-    if ($whois =~ /Delegated till\s*(.+?)\n/s) { $reg_till = $1; }
     if ($whois =~ /payed-till:\s*(.+?)\n/s) { $reg_till = $1; }
     if ($whois =~ /paid-till:\s*(.+?)\n/s) { $reg_till = $1; }
     if ($whois =~ /free-date:\s*(.+?)\n/s) { $free_date = $1; }
     if ($whois =~ /created:\s+([0-9.]+)\n/s) { $created = $1; }
+    if ($whois =~ /Delegated till\s*(.+?)\n/s) { $reg_till = $1; }
 
     $reg_till =~ tr/./-/ if $reg_till;
     $free_date =~ tr/./-/ if $free_date;
