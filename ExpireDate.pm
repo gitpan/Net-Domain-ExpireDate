@@ -8,8 +8,10 @@ use Net::Whois::Raw;
 use vars qw(@ISA @EXPORT $VERSION);
 
 @ISA = qw(Exporter);
-@EXPORT = qw( expire_date expdate_fmt expdate_int howmany_days_passed );
-$VERSION = '0.07';
+@EXPORT = qw(
+    expire_date expdate_fmt expdate_int decode_date howmany_days_passed
+);
+$VERSION = '0.08';
 
 # for Net::Whois::Raw
 $OMIT_MSG = 2;
@@ -64,16 +66,18 @@ sub howmany_days_passed {
 sub decode_date {
     my ($date, $format) = @_;
     return undef unless $date;
-    $format ||= '%Y-%m-%d';
+    $format ||= '%d.%m.%Y';
 
-    my $t = Time::Piece->strptime($date, $format);
-    unless ($t) {
+    my $t;
+    eval { $t = Time::Piece->strptime($date, $format); };
+    if ($@) {
 	warn "Can't parse date: ($date, $format)";
 	return undef;
     }
 
     return $t;
 }
+
 
 # extract expiration date from whois output for .com .net .org domains
 sub expdate_int_cno {
