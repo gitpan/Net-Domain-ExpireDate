@@ -11,7 +11,7 @@ use vars qw(@ISA @EXPORT $VERSION);
 @EXPORT = qw(
     expire_date expdate_fmt expdate_int decode_date howmany_days_passed
 );
-$VERSION = '0.08';
+$VERSION = '0.09';
 
 # for Net::Whois::Raw
 $OMIT_MSG = 2;
@@ -66,7 +66,7 @@ sub howmany_days_passed {
 sub decode_date {
     my ($date, $format) = @_;
     return undef unless $date;
-    $format ||= '%d.%m.%Y';
+    $format ||= '%Y-%m-%d';
 
     my $t;
     eval { $t = Time::Piece->strptime($date, $format); };
