@@ -3,7 +3,7 @@
 use lib qw(.);
 use Test;
 use Data::Dumper;
-BEGIN { plan tests => 50 };
+BEGIN { plan tests => 52 };
 
 use Net::Domain::ExpireDate;
 ok(1); # If we made it this far, we're ok.
@@ -61,6 +61,10 @@ ok( expdate_fmt("\nstate:   Delegated till 2003.10.01\nstate:   RIPN NCC check c
 ok( expdate_fmt("\ncreated:  2001.09.19\nreg-till: 2003.09.20\n", 'ru'), '2003-09-20' );
 ok( expdate_fmt("\nstate:    REGISTERED, NOT DELEGATED\nfree-date:2002.10.03\n", 'ru'), '2002-08-31' );
 
+# .ua tests
+
+ok( expdate_fmt("\nstatus:      OK-UNTIL 20040912000000\n", 'ua'), '2004-09-12' );
+
 # online tests
 
 print "The following tests requires internet connection...\n";
@@ -69,3 +73,4 @@ ok( expire_date("microsoft.com", '%Y-%m-%d'), '2012-05-03' );
 ok( expire_date("usa.biz", '%Y-%m-%d'), '2005-03-26' );
 ok( expire_date("nic.info", '%Y-%m-%d'), '2011-07-27' );
 ok( expire_date("nic.us", '%Y-%m-%d'), '2007-04-17' );
+ok( expire_date("bigmir.com.ua", '%Y-%m-%d'), '2004-09-12' );

@@ -10,7 +10,7 @@ use vars qw(@ISA @EXPORT @EXPORT_OK $VERSION $USE_REGISTRAR_SERVERS);
 @ISA = qw(Exporter);
 @EXPORT = qw( expire_date expdate_fmt expdate_int );
 @EXPORT_OK = qw( decode_date );
-$VERSION = '0.23';
+$VERSION = '0.24';
 
 $USE_REGISTRAR_SERVERS = 0; # Don't make direct queries to registrar server
 
@@ -55,6 +55,8 @@ sub expdate_int {
 
     if ($tld eq 'ru' || $tld eq 'su') {
 	return expdate_int_ru( $whois );
+    } elsif ($tld eq 'ua') {
+	return expdate_int_ua( $whois );
     } elsif (isin($tld, ['com', 'net', 'org', 'biz', 'info', 'us'])) {
 	return expdate_int_cno( $whois );
     } else {
@@ -197,7 +199,7 @@ sub expdate_int_cno {
     return decode_date( $dstr, $fstr );
 }
 
-# extract expiration date from whois output for .ru domains
+# extract expiration date from whois output for .ru and .su domains
 sub expdate_int_ru {
     my ($whois) = @_;
     return undef unless $whois;
@@ -282,6 +284,22 @@ sub pushstate {
 	$state =~ /RIPN NCC check completed OK/i
     );
     push @{$states}, $state;
+}
+
+# extract expiration date from whois output for .ua domains
+sub expdate_int_ua {
+    my ($whois) = @_;
+    return undef unless $whois;
+
+    # $Y - The year, including century
+    # $m - The month number (1-12)
+    # $d - The day of month (1-31)
+    my ($rulenum, $Y, $y, $m, $b, $d);
+    if ($whois =~ m/status:\s+OK-UNTIL (\d{4})(\d{2})(\d{2})/is) {
+	$Y = $1; $m = $2; $d = $3;
+	return decode_date( "$Y $m $d", "%Y %m %d" );
+    }
+    return undef;
 }
 
 sub isin {

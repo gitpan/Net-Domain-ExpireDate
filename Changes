@@ -1,5 +1,8 @@
 Revision history for Perl extension Net::Domain::ExpireDate.
 
+0.24 2003-Nov-21
+	- support for .UA domains
+
 0.23 2003-Nov-10
 	- more date recognition templates for .biz domains
 
