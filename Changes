@@ -77,4 +77,8 @@ Revision history for Perl extension Net::Domain::ExpireDate.
 
 0.30 2004-Dec-09
 	- added initial support of obtaining domain creation dates;
-	  new exported functions: domain_dates domdates_int
+	- new exported functions: domain_dates domdates_int
+
+0.31 2005-Feb-26
+	- more creation date patterns;
+	- new exported function: credate_fmt

@@ -7,12 +7,17 @@ use Time::Piece;
 use Net::Whois::Raw qw(whois $OMIT_MSG $CHECK_FAIL);
 use vars qw(@ISA @EXPORT @EXPORT_OK $VERSION $USE_REGISTRAR_SERVERS);
 
+use constant FLG_EXPDATE => 0b0001;
+use constant FLG_CREDATE => 0b0010;
+use constant FLG_ALL     => 0b1111;
+
 @ISA = qw(Exporter);
 @EXPORT = qw(
-    expire_date expdate_int expdate_fmt domain_dates domdates_fmt $USE_REGISTRAR_SERVERS
+    expire_date expdate_int expdate_fmt credate_fmt domain_dates domdates_fmt
+    $USE_REGISTRAR_SERVERS
 );
 @EXPORT_OK = qw( decode_date );
-$VERSION = '0.27';
+$VERSION = '0.31';
 
 $USE_REGISTRAR_SERVERS = 0;
 # 0 - make queries to registry server
@@ -85,10 +90,10 @@ sub expire_date_query {
 }
 
 sub domdates_fmt {
-    my ($whois, $tld, $format, $onlyexpdate) = @_;
+    my ($whois, $tld, $format, $flags) = @_;
     $format ||= '%Y-%m-%d';
 
-    my ($cre_date, $exp_date, $fre_date) = domdates_int( $whois, $tld, $onlyexpdate );
+    my ($cre_date, $exp_date, $fre_date) = domdates_int( $whois, $tld, $flags );
 
     local $^W = 0;  # prevent warnings
 
@@ -102,20 +107,29 @@ sub domdates_fmt {
 sub expdate_fmt {
     my ($whois, $tld, $format) = @_;
 
-    my ($cre_date, $exp_date, $fre_date) = domdates_fmt( $whois, $tld, $format, 1 );
+    my ($cre_date, $exp_date) = domdates_fmt( $whois, $tld, $format, FLG_EXPDATE );
 
     return $exp_date;
 }
 
+sub credate_fmt {
+    my ($whois, $tld, $format) = @_;
+
+    my ($cre_date, $exp_date) = domdates_fmt( $whois, $tld, $format, FLG_CREDATE );
+
+    return $cre_date;
+}
+
 sub domdates_int {
-    my ($whois, $tld, $onlyexpdate) = @_;
+    my ($whois, $tld, $flags) = @_;
     $tld ||= 'com';
+    $flags ||= FLG_ALL;
 
     if ($tld eq 'ru' || $tld eq 'su') {
 	return (dates_int_ru( $whois ));
     } elsif (isin($tld, ['com', 'net', 'org', 'biz', 'info', 'us', 'uk'])) {
-	my $expdate = expdate_int_cno( $whois );
-	my $credate = $onlyexpdate ? undef : credate_int_cno( $whois );
+	my $expdate = $flags & FLG_EXPDATE ? expdate_int_cno( $whois ) : undef;
+	my $credate = $flags & FLG_CREDATE ? credate_int_cno( $whois ) : undef;
 	return ($credate, $expdate);
     } else {
 	return ();
@@ -272,20 +286,40 @@ sub credate_int_cno {
     return undef unless $whois;
 
     # $Y - The year, including century
+    # $y - The year within century (0-99)
     # $m - The month number (1-12)
     # $b - The month name
     # $d - The day of month (1-31)
     my ($rulenum, $Y, $y, $m, $b, $d);
 
     # [whois.crsnic.net]		Creation Date: 06-sep-2000
-    if ($whois =~ m/Creation Date:\s*(\d{2})-(\w{3})-(\d{4})/s) {
+    # [whois.afilias.info]		Created On:31-Jul-2001 08:42:21 UTC
+    if ($whois =~ m/Creat.+?:\s*(\d{2})-(\w{3})-(\d{4})/s) {
 	$rulenum = 1.2;	$d = $1; $b = $2; $Y = $3;
+    # [Querying whois.nic.name]		Created On: 2002-02-08T14:56:54Z
+    } elsif ($whois =~ m/Creat.+?:\s*?(\d{4})[\/-](\d{1,2})[\/-](\d{1,2})/is) {
+	$rulenum = 2.1;	$Y = $1; $m = $2; $d = $3;
+    } elsif ($whois =~ m/Registration.*?:?\s*\w{3} (\w{3})\s{1,2}(\d{1,2}) \d{2}:\d{2}:\d{2} (\d{4})/is) {
+	$rulenum = 4.2;	$b = $1; $d = $2; $Y = $3;
+    # [whois.whois.neulevel.biz]	Domain Registration Date: Wed Mar 27 00:01:00 GMT 2002
+    } elsif ($whois =~ m/Registration.*?:\s+\w{3} (\w{3}) (\d{2}) (?:\d{2}:\d{2}:\d{2} \w{3}(?:[-+]\d{2}:\d{2})? )?(\d{4})/is) {
+	$rulenum = 4.3; $b = $1; $d = $2; $Y = $3;
     } else {
 	warn "Can't recognise creation date format\n";
 	return undef;
     }
 
-    return decode_date( "$Y $b $d", '%Y %b %d' );
+    my ($fstr, $dstr) = ('', '');
+    $fstr .= $Y ? '%Y ' : '%y ';
+    $dstr .= $Y ? "$Y " : "$y ";
+
+    $fstr .= $b ? '%b ' : '%m ';
+    $dstr .= $b ? "$b " : "$m ";
+
+    $fstr .= '%d';
+    $dstr .= $d;
+
+    return decode_date( $dstr, $fstr );
 }
 
 
