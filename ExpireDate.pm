@@ -8,11 +8,17 @@ use Net::Whois::Raw qw(whois $OMIT_MSG $CHECK_FAIL);
 use vars qw(@ISA @EXPORT @EXPORT_OK $VERSION $USE_REGISTRAR_SERVERS);
 
 @ISA = qw(Exporter);
-@EXPORT = qw( expire_date expdate_fmt expdate_int );
+@EXPORT = qw(
+    expire_date expdate_int expdate_fmt domain_dates domdates_fmt $USE_REGISTRAR_SERVERS
+);
 @EXPORT_OK = qw( decode_date );
-$VERSION = '0.25';
+$VERSION = '0.27';
 
-$USE_REGISTRAR_SERVERS = 0; # Don't make direct queries to registrar server
+$USE_REGISTRAR_SERVERS = 0;
+# 0 - make queries to registry server
+# 1 - make queries to registrar server
+# 2 - make queries to registrar server
+#     and in case of fault make query to registry server
 
 # for Net::Whois::Raw
 $OMIT_MSG = 2; $CHECK_FAIL = 3;
@@ -20,15 +26,55 @@ $OMIT_MSG = 2; $CHECK_FAIL = 3;
 sub expire_date {
     my ($domain, $format) = @_;
 
+    if ($USE_REGISTRAR_SERVERS == 0) {
+	return expire_date_query( $domain, $format, 1 )
+    } elsif ($USE_REGISTRAR_SERVERS == 1) {
+	return expire_date_query( $domain, $format, 0 )
+    } elsif ($USE_REGISTRAR_SERVERS == 2) {
+	return expire_date_query( $domain, $format, 0 )
+	    || expire_date_query( $domain, $format, 1 );
+    }
+    
+    return undef;
+}
+
+sub domain_dates {
+    my ($domain, $format) = @_;
+
     return undef unless ($domain =~ /(.+?)\.([^.]+)$/);
     my ($name, $tld) = (lc $1, lc $2);
 
     my $whois;
-    if (($tld eq 'com' || $tld eq 'net') && !$USE_REGISTRAR_SERVERS) {
+    if (isin($tld, ['com', 'net'])) {
 	$whois = whois( $domain, 'whois.crsnic.net' );
-    } elsif ($tld eq 'org' && !$USE_REGISTRAR_SERVERS) {
+    } elsif ($tld eq 'org') {
+	$whois = whois( $domain, 'whois.publicinterestregistry.net' );
+    } else {
+	$whois = whois( $domain );
+    }
+
+    if ($format) {
+	return (domdates_fmt( $whois, $tld, $format ));
+    } else {
+	return (domdates_int( $whois, $tld ));
+    }
+    
+    return undef;
+}
+
+sub expire_date_query {
+    my ($domain, $format, $via_registry) = @_;
+
+    return undef unless ($domain =~ /(.+?)\.([^.]+)$/);
+    my ($name, $tld) = (lc $1, lc $2);
+
+    my $whois;
+    if (isin($tld, ['com', 'net']) && $via_registry) {
+	$whois = whois( $domain, 'whois.crsnic.net' );
+    } elsif ($tld eq 'org' && $via_registry) {
 	$whois = whois( $domain, 'whois.publicinterestregistry.net' );
     }
+
     $whois ||= whois( $domain );
 
     if ($format) {
@@ -38,28 +84,49 @@ sub expire_date {
     }
 }
 
-sub expdate_fmt {
-    my ($whois, $tld, $format) = @_;
+sub domdates_fmt {
+    my ($whois, $tld, $format, $onlyexpdate) = @_;
     $format ||= '%Y-%m-%d';
 
-    my $time = expdate_int( $whois, $tld );
-    return undef unless $time;
-    
-    local $^W=0;                # prevent a warning
-    return $time->strftime( $format );
+    my ($cre_date, $exp_date, $fre_date) = domdates_int( $whois, $tld, $onlyexpdate );
+
+    local $^W = 0;  # prevent warnings
+
+    $cre_date = $cre_date ? $cre_date->strftime( $format ) : '';
+    $exp_date = $exp_date ? $exp_date->strftime( $format ) : '';
+    $fre_date = $fre_date ? $fre_date->strftime( $format ) : '';
+
+    return ($cre_date, $exp_date, $fre_date);
+}
+
+sub expdate_fmt {
+    my ($whois, $tld, $format) = @_;
+
+    my ($cre_date, $exp_date, $fre_date) = domdates_fmt( $whois, $tld, $format, 1 );
+
+    return $exp_date;
+}
+
+sub domdates_int {
+    my ($whois, $tld, $onlyexpdate) = @_;
+    $tld ||= 'com';
+
+    if ($tld eq 'ru' || $tld eq 'su') {
+	return (dates_int_ru( $whois ));
+    } elsif (isin($tld, ['com', 'net', 'org', 'biz', 'info', 'us', 'uk'])) {
+	my $expdate = expdate_int_cno( $whois );
+	my $credate = $onlyexpdate ? undef : credate_int_cno( $whois );
+	return ($credate, $expdate);
+    } else {
+	return ();
+    }
 }
 
 sub expdate_int {
     my ($whois, $tld) = @_;
-    $tld ||= 'com';
 
-    if ($tld eq 'ru' || $tld eq 'su') {
-	return expdate_int_ru( $whois );
-    } elsif (isin($tld, ['com', 'net', 'org', 'biz', 'info', 'us', 'uk'])) {
-	return expdate_int_cno( $whois );
-    } else {
-	return undef;
-    }
+    my ($cre_date, $exp_date, $fre_date) = domdates_int( $whois, $tld, 1 );
+    return $exp_date;
 }
 
 # --- internal functions ----
@@ -93,7 +160,6 @@ sub expdate_int_cno {
 
     # [whois.networksolutions.com]	Record expires on 27-Apr-2011.
     # [whois.opensrs.net]
-    # [whois.easyspace.com]
     # [whois.namesdirect.com]
     # [whois.dotregistrar.com]
     # [whois.domaininfo.com]		Domain expires: 24 Oct 2010
@@ -122,7 +188,8 @@ sub expdate_int_cno {
     # [whois.totalnic.net]		Record expires on 2010-04-24 16:03:20+10
     # [whois.signaturedomains.com]	Expires on: 2003-11-05
     # [whois.1stdomain.net]		Domain expires: 2007-01-20.
-    } elsif ($whois =~ m&(?:Record |Domain )?(?:will )?(?:be )?expir(?:e|ed|es|ing)(?: on)?(?: date)?\s*[-:]?\s+(\d{4})[/-](\d{1,2})[/-](\d{2})&is) {
+    # [whois.easyspace.com]
+    } elsif ($whois =~ m&(?:Record |Domain )?(?:will )?(?:be )?expir(?:e|ed|es|ing)(?: on)?(?: date)?\s*[-:]?\s*(\d{4})[/-](\d{1,2})[/-](\d{1,2})&is) {
 	$rulenum = 2.1;	$Y = $1; $m = $2; $d = $3;
     # [whois.InternetNamesWW.com]	Expiry Date.......... 2009-06-16
     # [whois.aitdomains.com]		Expire on................ 2002-11-05 16:42:41.000
@@ -179,7 +246,7 @@ sub expdate_int_cno {
     }
 
     unless ($rulenum) {
-	warn "Can't recognise date format\n";
+	warn "Can't recognise expiration date format\n";
 	return undef;
     } else {
 	#warn "rulenum: $rulenum\n";
@@ -198,60 +265,54 @@ sub expdate_int_cno {
     return decode_date( $dstr, $fstr );
 }
 
-# extract expiration date from whois output for .ru domains
-sub expdate_int_ru {
+
+# extract creation date from whois output for .com .net .org domains
+sub credate_int_cno {
     my ($whois) = @_;
     return undef unless $whois;
 
-    my @states;
-    while ($whois =~ /state:   (.+?)\n/gs) { pushstate(\@states, $1) };
-    while ($whois =~ /reg-till: (.+?)\n/gs) { pushstate(\@states, "reg-till: $1") };
-    while ($whois =~ /payed-till: (.+?)\n/gs) { pushstate(\@states, "reg-till: $1") };
-    while ($whois =~ /paid-till: (.+?)\n/gs) { pushstate(\@states, "reg-till: $1") };
-    while ($whois =~ /free-date:(.+?)\n/gs) { pushstate(\@states, "free-date: $1") };
-    my $res = join( '; ', @states );
+    # $Y - The year, including century
+    # $m - The month number (1-12)
+    # $b - The month name
+    # $d - The day of month (1-31)
+    my ($rulenum, $Y, $y, $m, $b, $d);
 
-    my ($reg_till, $free_date, $active, $created);
-
-    # ON-HOLD domains
-    if ($res =~ /NOT DELEGATED; reg-till:\s+([0-9.]+); free-date:\s+([0-9.]+)/) {
-	$active = 0;
-	($reg_till = $1) =~ tr/./-/;
-	($free_date = $2) =~ tr/./-/;
-    } elsif ($res =~ /NOT DELEGATED; reg-till: ([0-9.]+)/i) {
-	$active = 0;
-	($reg_till = $1) =~ tr/./-/;
-    } elsif ($res =~ /Not delegated; (?:freeing date -|free-date:)\s+([0-9.]+)/i) {
-	$active = 0;
-	($free_date = $1) =~ tr/./-/;
-    } elsif ($res =~ /Not delegated/i) {
-	$active = 0;
-    # ACTIVE DOMAINS
-    } elsif ($res =~ /reg-till:\s+([0-9.]+); free-date:\s+([0-9.]+)/) {
-	$active = 1;
-	($reg_till = $1) =~ tr/./-/;
-	($free_date = $2) =~ tr/./-/;
-    } elsif ($res =~ /reg-till:\s+([0-9.]+)/) {
-	$active = 1;
-	($reg_till = $1) =~ tr/./-/;
-    } elsif ($res =~ /Delegated till ([0-9.]+)/) {
-	$active = 1;
-	($reg_till = $1) =~ tr/./-/;
-    } elsif ($res =~ /Delegated/) {
-	$active = 1;
-    # NOT-ACTIVE-YET DOMAINS
-    } elsif ($res =~ /RIPN NCC check in progress/) {
-	$active = 0;
+    # [whois.crsnic.net]		Creation Date: 06-sep-2000
+    if ($whois =~ m/Creation Date:\s*(\d{2})-(\w{3})-(\d{4})/s) {
+	$rulenum = 1.2;	$d = $1; $b = $2; $Y = $3;
     } else {
-	warn "Unknown record: $res\n";
+	warn "Can't recognise creation date format\n";
 	return undef;
     }
 
-    if ($whois =~ /created:\s+([0-9.]+)\n/gs) {
-	($created = $1) =~ tr/./-/;
+    return decode_date( "$Y $b $d", '%Y %b %d' );
+}
 
-	# ”гадаем дату reg-till
-	my $t = decode_date( $created, '%Y-%m-%d' );
+
+
+# extract creation/expiration dates from whois output for .ru and .su domains
+sub dates_int_ru {
+    my ($whois) = @_;
+    return undef unless $whois;
+
+    my ($reg_till, $free_date, $created);
+
+    if ($whois =~ /reg-till:\s*(.+?)\n/s) { $reg_till = $1; }
+    if ($whois =~ /Delegated till\s*(.+?)\n/s) { $reg_till = $1; }
+    if ($whois =~ /payed-till:\s*(.+?)\n/s) { $reg_till = $1; }
+    if ($whois =~ /paid-till:\s*(.+?)\n/s) { $reg_till = $1; }
+    if ($whois =~ /free-date:\s*(.+?)\n/s) { $free_date = $1; }
+    if ($whois =~ /created:\s+([0-9.]+)\n/s) { $created = $1; }
+
+    $reg_till =~ tr/./-/ if $reg_till;
+    $free_date =~ tr/./-/ if $free_date;
+    $created =~ tr/./-/ if $created;
+
+    if ($created) {
+	# Guess reg-till date
+	$created = decode_date( $created, '%Y-%m-%d' );
+	my $t = $created;
+
 	if ($t && !$reg_till && !$free_date) {
 	    $t += 0;
 	    while ($t < localtime()) {
@@ -262,7 +323,7 @@ sub expdate_int_ru {
     }
 
     unless ( $reg_till || $free_date ) {
-	warn "Can't obtain expiration date from: $res\n";
+	warn "Can't obtain expiration date from ($reg_till)\n";
 	return undef;
     }
 
@@ -272,17 +333,7 @@ sub expdate_int_ru {
 	$reg_till = $free_date - 33 * ONE_DAY;
     }
     
-    return $reg_till;
-}
-
-sub pushstate {
-    my ($states, $state) = @_;
-    return if (
-	$state =~ /REGISTERED, DELEGATED/i
-	||
-	$state =~ /RIPN NCC check completed OK/i
-    );
-    push @{$states}, $state;
+    return ($created, $reg_till, $free_date);
 }
 
 sub isin {
@@ -306,10 +357,14 @@ Net::Domain::ExpireDate - obtain expiration date of domain names
 
  use Net::Domain::ExpireDate;
 
- $date = expire_date( 'microsoft.com' );
- $str  = expire_date( 'microsoft.com', '%Y-%m-%d' );
- $date = expdate_int( $whois_text, 'com' );
- $str  = expdate_fmt( $whois_text, 'ru', '%Y-%m-%d' );
+ $expiration_obj = expire_date( 'microsoft.com' );
+ $expiration_str  = expire_date( 'microsoft.com', '%Y-%m-%d' );
+ $expiration_obj = expdate_int( $whois_text, 'com' );
+ $expiration_str  = expdate_fmt( $whois_text, 'ru', '%Y-%m-%d' );
+
+ ($creation_obj, $expiration_obj) = domain_dates( 'microsoft.com' );
+ ($creation_str, $expiration_str) = domain_dates( 'microsoft.com', '%Y-%m-%d' );
+ ($creation_obj, $expiration_obj) = domdates_int( $whois_text, 'com' );
 
 =head1 DESCRIPTION
 
@@ -319,9 +374,8 @@ Unfortunately there are too many different whois servers which provides
 whois info in very different formats.
 Net::Domain::ExpireDate knows more than 40 different formats of
 expiration date representation provided by different servers (almost
-all gTLD registrars and some ccTLD registrars are covered). If an
-expiration date format is unknown to Net::Domain::ExpireDate - then
-heuristics is used to determine expiration date.
+all gTLD registrars and some ccTLD registrars are covered).
+Now obtaining of domain creation date is also supported.
 
 "$date" in synopsis is an object of type L<Time::Piece>.
 
@@ -340,8 +394,8 @@ See L<strftime> man page for C<FORMAT> specification.
 
 Extracts expiration date of domain in TLD from C<WHOISTEXT>.
 If no TLD is given 'com' is the default. There is no
-distinction between 'com', 'net' or 'org' TLDs in this function.
-Also 'biz', 'info', 'us', 'ru' and 'su' TLDs are suppored.
+distinction between 'com' or 'net' TLDs in this function.
+Also 'org', 'biz', 'info', 'us', 'ru' and 'su' TLDs are suppored.
 Returns L<Time::Piece> object.
 
 With C<FORMAT> argument returns date formatted using C<FORMAT> template
@@ -353,11 +407,27 @@ Similar to expdate_int except that output value is formatted date.
 If no C<FORMAT> specified, '%Y-%m-%d' is assumed.
 See L<strftime> man page for C<FORMAT> specification.
 
+=item domain_dates( DOMAIN [,FORMAT] )
+
+Returns list of two values - creation and expiration date of C<DOMAIN>.
+Without C<FORMAT> argument returns L<Time::Piece> objects.
+With C<FORMAT> argument dates are formatted using C<FORMAT> template.
+See L<strftime> man page for C<FORMAT> specification.
+
+=item domdates_int( WHOISTEXT [,TLD] )
+
+Returns list of two values - creation and expiration date of domain
+extracted from C<WHOISTEXT>.
+If no TLD is given 'com' is the default. There is no
+distinction between 'com' or 'net' TLDs in this function.
+Also 'org', 'biz', 'info', 'us', 'ru' and 'su' TLDs are suppored.
+Returns L<Time::Piece> object.
+
 =back
 
 =head1 AUTHOR
 
-Walery Studennikov, <despair@regtime.net>
+Walery Studennikov, <despair@cpan.org>
 
 =head1 SEE ALSO
 

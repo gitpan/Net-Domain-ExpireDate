@@ -1,15 +1,20 @@
 #!/usr/bin/perl -w
 
+use strict;
 use lib qw(.);
 use Test;
 use Data::Dumper;
-BEGIN { plan tests => 50 };
+BEGIN { plan tests => 54 };
 
 use Net::Domain::ExpireDate;
+
+$USE_REGISTRAR_SERVERS = 2;
+
 ok(1); # If we made it this far, we're ok.
 
-# .com .net .org tests
+# expiration date tests
 
+# .com .net .org tests
 ok( expdate_fmt("\nRecord expires on 27-Apr-2011.\n"), '2011-04-27' );
 ok( expdate_fmt("\nDomain expires: 24 Oct 2010\n"), '2010-10-24' );
 ok( expdate_fmt("\nRecord expires on........: 03-Jun-2005 EST.\n"), '2005-06-03' );
@@ -56,17 +61,24 @@ ok( expdate_fmt("\nRecord will expire on -  2003-04-25\n"), '2003-04-25' );
 ok( expdate_fmt("\nRecord will be expiring on date: 2003-04-25\n"), '2003-04-25' );
 
 # .ru tests
-
 ok( expdate_fmt("\nstate:   Delegated till 2003.10.01\nstate:   RIPN NCC check completed OK\n", 'ru'), '2003-10-01' );
 ok( expdate_fmt("\ncreated:  2001.09.19\nreg-till: 2003.09.20\n", 'ru'), '2003-09-20' );
 ok( expdate_fmt("\nstate:    REGISTERED, NOT DELEGATED\nfree-date:2002.10.03\n", 'ru'), '2002-08-31' );
 
+# creation date tests
+
+ok( sub { join ';', domdates_fmt("\nCreation Date: 06-sep-2000\nExpiration Date: 06-sep-2005\n") }, '2000-09-06;2005-09-06;' );
+ok( sub { join ';', domdates_fmt("\ncreated:    2001.09.19\npaid-till:  2005.09.20\n", 'ru') }, '2001-09-19;2005-09-20;' );
+
 # online tests
 
-print "The following tests requires internet connection...\n";
+print "The following tests requires internet connection and may fail if checked domains were renewed...\n";
 
-ok( expire_date("microsoft.com", '%Y-%m-%d'), '2013-05-03' );
-ok( expire_date("usa.biz", '%Y-%m-%d'), '2005-03-26' );
+ok( expire_date("microsoft.com", '%Y-%m-%d'), '2014-05-03' );
+ok( expire_date("usa.biz", '%Y-%m-%d'), '2006-03-26' );
 ok( expire_date("nic.info", '%Y-%m-%d'), '2011-07-27' );
 ok( expire_date("nic.us", '%Y-%m-%d'), '2007-04-17' );
 ok( expire_date("orenet.co.uk", '%Y-%m-%d'), '2006-01-23' );
+
+ok( sub { join ';', domain_dates("regtime.net", '%Y-%m-%d') }, '2000-09-06;2005-09-06;' );
+ok( sub { join ';', domain_dates("webnames.ru", '%Y-%m-%d') }, '2001-09-19;2005-09-20;' );

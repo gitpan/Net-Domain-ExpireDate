@@ -67,5 +67,14 @@ Revision history for Perl extension Net::Domain::ExpireDate.
 
 0.23 2003-Nov-10
 	- more date recognition templates for .biz domains
+
 0.25 2004-Mar-25
 	- new patterns for .co.uk domains by Kyrian <kyrian@ore.org>
+
+0.26 2004-Aug-17
+	- export $USE_REGISTRAR_SERVERS;
+	  new magic numbers for $USE_REGISTRAR_SERVERS
+
+0.30 2004-Dec-09
+	- added initial support of obtaining domain creation dates;
+	  new exported functions: domain_dates domdates_int
