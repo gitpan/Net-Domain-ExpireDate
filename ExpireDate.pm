@@ -5,12 +5,14 @@ use strict;
 use Time::Seconds;
 use Time::Piece;
 use Net::Whois::Raw qw(whois $OMIT_MSG $CHECK_FAIL);
-use vars qw(@ISA @EXPORT @EXPORT_OK $VERSION);
+use vars qw(@ISA @EXPORT @EXPORT_OK $VERSION $USE_REGISTRAR_SERVERS);
 
 @ISA = qw(Exporter);
 @EXPORT = qw( expire_date expdate_fmt expdate_int );
 @EXPORT_OK = qw( decode_date );
-$VERSION = '0.16';
+$VERSION = '0.20';
+
+$USE_REGISTRAR_SERVERS = 0; # Don't make direct queries to registrar server
 
 # for Net::Whois::Raw
 $OMIT_MSG = 2; $CHECK_FAIL = 2;
@@ -19,9 +21,15 @@ sub expire_date {
     my ($domain, $format) = @_;
 
     return undef unless ($domain =~ /(.+?)\.([^.]+)$/);
-    my ($name, $tld) = ($1, $2);
+    my ($name, $tld) = (lc $1, lc $2);
 
-    my $whois = whois( $domain );
+    my $whois;
+    if (($tld eq 'com' || $tld eq 'net') && !$USE_REGISTRAR_SERVERS) {
+	$whois = whois( $domain, 'whois.crsnic.net' );
+    } elsif ($tld eq 'org' && !$USE_REGISTRAR_SERVERS) {
+	$whois = whois( $domain, 'whois.publicinterestregistry.net' );
+    }
+    $whois ||= whois( $domain );
 
     if ($format) {
 	return expdate_fmt( $whois, $tld, $format );
@@ -47,8 +55,10 @@ sub expdate_int {
 
     if ($tld eq 'ru' || $tld eq 'su') {
 	return expdate_int_ru( $whois );
-    } else {
+    } elsif ($tld eq 'com' || $tld eq 'net' || $tld eq 'org') {
 	return expdate_int_cno( $whois );
+    } else {
+	return undef;
     }
 }
 
@@ -68,7 +78,6 @@ sub decode_date {
 
     return $t;
 }
-
 
 # extract expiration date from whois output for .com .net .org domains
 sub expdate_int_cno {
@@ -93,7 +102,8 @@ sub expdate_int_cno {
     if ($whois =~ m/(?:Record |Domain )?expire(?:d|s)(?: on\s?)?\.*:?\s+(\d{2})[- ](\w{3})[- ](\d{4})/is) {
 	$rulenum = 1.1;	$d = $1; $b = $2; $Y = $3;
     # [whois.discount-domain.com]	Expiration Date: 02-Aug-2003 22:07:21
-    # [?????????????]			Expiration Date:03-Mar-2004 05:00:00 UTC
+    # [whois.publicinterestregistry.net] Expiration Date:03-Mar-2004 05:00:00 UTC
+    # [whois.crsnic.net]		Expiration Date: 21-sep-2004
     } elsif ($whois =~ m/Expiration Date:\s*(\d{2})-(\w{3})-(\d{4})/s) {
 	$rulenum = 1.2;	$d = $1; $b = $2; $Y = $3;
     # [whois.bulkregister.com]		Record expires on 2003-04-25
@@ -131,7 +141,7 @@ sub expdate_int_cno {
     # [whois.registrar.aol.com]		Expires on..............: Oct  5 2002 12:00AM
     # [whois.itsyourdomain.com]		Record expires on March 06, 2011
     # [whois.doregi.com]		Record expires on.......: Oct  28, 2011
-    } elsif ($whois =~ m/(?:Record )?expires on?\.*:? (?:\w{3}, )?(\w{3,5})\s{1,2}(\d{1,2}),? (\d{4})/is) {
+    } elsif ($whois =~ m/(?:Record )?expires on\.*:? (?:\w{3}, )?(\w{3,9})\s{1,2}(\d{1,2}),? (\d{4})/is) {
 	$rulenum = 4.1;	$b = $1; $d = $2; $Y = $3;
     # [whois.domainpeople.com]		Expires on .............WED NOV 16 09:09:52 2011
     # [whois.e-names.org]		Expires after:   Mon Jun  9 23:59:59 2003
@@ -152,6 +162,8 @@ sub expdate_int_cno {
     } elsif ($whois =~ m/(?:Record |Domain )?expires on\.*:? (\d{4})-(\w{3})-(\d{2})/is) {
 	$rulenum = 6;	$Y = $1; $b = $2; $d = $3;
     # [whois.enom.com]			Expiration date: 09/21/03 13:45:09
+    } elsif ($whois =~ m|Expiration date: (\d{2})/(\d{2})/(\d{2})|s) {
+	$rulenum = 7;	$m = $1; $d = $2; $y = $3;
     } elsif ($whois =~ m|Expiration date: (\d{2})/(\d{2})/(\d{2})|s) {
 	$rulenum = 7;	$m = $1; $d = $2; $y = $3;
     }

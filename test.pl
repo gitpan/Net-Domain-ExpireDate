@@ -1,5 +1,6 @@
 #!/usr/bin/perl -w
 
+use lib qw(blib/lib);
 use Test;
 use Data::Dumper;
 BEGIN { plan tests => 48 };
@@ -35,7 +36,7 @@ ok( expdate_fmt("\nexpires:        20030803\n"), '2003-08-03' );
 ok( expdate_fmt("\nExpires on: 12-DEC-05\n"), '2005-12-12' );
 ok( expdate_fmt("\nExpires on..............: Tue, Aug 04, 2009\n"), '2009-08-04' );
 ok( expdate_fmt("\nExpires on..............: Oct  5 2002 12:00AM\n"), '2002-10-05' );
-ok( expdate_fmt("\nRecord expires on March 06, 2011\n"), '2011-03-06' );
+ok( expdate_fmt("\nRecord expires on December 05, 2004\n"), '2004-12-05' );
 ok( expdate_fmt("\nRecord expires on.......: Oct  28, 2011\n"), '2011-10-28' );
 ok( expdate_fmt("\nExpires on .............WED NOV 16 09:09:52 2011\n"), '2011-11-16' );
 ok( expdate_fmt("\nExpires after:   Mon Jun  9 23:59:59 2003\n"), '2003-06-09' );

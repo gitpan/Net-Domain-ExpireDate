@@ -1,5 +1,17 @@
 Revision history for Perl extension Net::Domain::ExpireDate.
 
+0.20 2003-Aug-11
+	- major change for .com .net .org domains:
+	  extract expiration date from
+	  whois.crsnic.net and whois.publicinterestregistry.net
+	  rather than from servers of specific registrar.
+	  If you want old behaviour:
+	    use Net::Domain::ExpireDate qw( $USE_REGISTRAR_SERVERS );
+	    $USE_REGISTRAR_SERVERS = 1;
+
+0.17 2003-Aug-11
+	- fixed parsing of data from itsyourdomain.com
+
 0.16 2003-Jul-16
 	- guessing expiration date of .RU and .SU domains
 	- howmany_days_passed function removed
