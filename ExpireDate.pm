@@ -10,12 +10,12 @@ use vars qw(@ISA @EXPORT @EXPORT_OK $VERSION $USE_REGISTRAR_SERVERS);
 @ISA = qw(Exporter);
 @EXPORT = qw( expire_date expdate_fmt expdate_int );
 @EXPORT_OK = qw( decode_date );
-$VERSION = '0.22';
+$VERSION = '0.23';
 
 $USE_REGISTRAR_SERVERS = 0; # Don't make direct queries to registrar server
 
 # for Net::Whois::Raw
-$OMIT_MSG = 2; $CHECK_FAIL = 2;
+$OMIT_MSG = 2; $CHECK_FAIL = 3;
 
 sub expire_date {
     my ($domain, $format) = @_;
@@ -150,7 +150,7 @@ sub expdate_int_cno {
     # [whois.enom.com]			Expiration date: Fri Sep 21 2012 13:45:09
     # [whois.enom.com]			Expires: Fri Sep 21 2012 13:45:09
     # [whois.neulevel.biz]		Domain Expiration Date: Fri Mar 26 23:59:59 GMT 2004
-    } elsif ($whois =~ m/(?:Domain )?(?:Expires|Expiration Date):\s+\w{3} (\w{3}) (\d{2}) (?:\d{2}:\d{2}:\d{2} \w{3} )(\d{4})/is) {
+    } elsif ($whois =~ m/(?:Domain )?(?:Expires|Expiration Date):\s+\w{3} (\w{3}) (\d{2}) (?:\d{2}:\d{2}:\d{2} \w{3}(?:[-+]\d{2}:\d{2})? )(\d{4})/is) {
 	$rulenum = 4.3; $b = $1; $d = $2; $Y = $3;
     # [rs.domainbank.net]		Record expires on 10-05-2003 11:21:25 AM
     # [whois.psi-domains.com]

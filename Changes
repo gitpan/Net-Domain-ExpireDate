@@ -1,5 +1,8 @@
 Revision history for Perl extension Net::Domain::ExpireDate.
 
+0.23 2003-Nov-10
+	- more date recognition templates for .biz domains
+
 0.22 2003-Nov-03
 	- support of new TLDs: .biz, .info and .us
 
