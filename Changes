@@ -1,13 +1,53 @@
 Revision history for Perl extension Net::Domain::ExpireDate.
 
-0.23 2003-Nov-10
-	- more date recognition templates for .biz domains
+0.01 2002-Oct-02 
+	- original version; created by h2xs 1.21
 
-0.22 2003-Nov-03
-	- support of new TLDs: .biz, .info and .us
+0.03 2003-Jan-13
+	- fixed parsing of whois results of whois.bulkregister.com
 
-0.21 2003-Aug-25
-	- new patterns for whois.enom.com by "Ahmed Akef" <akef@aucegypt.edu>
+0.04 2003-Feb-10
+	- fixed parsing of whois results of whois.networksolutions.com
+
+0.06 2003-Feb-14
+	- documendation update: added functions reference
+
+0.07 2003-Feb-17
+	- fixed parsing of whois results of whois.ripn.net
+
+0.09 2003-Mar-05
+	- fixed decode_date(), now exporting decode_date
+
+0.10 2003-Mar-07
+	- fixed parsing of data from whois.ripn.net (for .RU domains)
+
+0.11 2003-Apr-24
+	- fixed parsing of data from whois.ripn.net (for .RU domains)
+
+
+0.12 2003-May-11
+	- adopted to new version Net::Whois::Raw
+	  (explicitly importing $OMIT_MSG $CHECK_FAIL)
+
+0.13 2003-May-11
+	- more fixes regarding new Net::Whois::Raw
+
+0.14 2003-May-14
+	- more fixes regarding new Net::Whois::Raw
+	  (they have changed the interface!)
+
+
+0.15 2003-Jul-16
+	- not exporting decode_date by default
+
+0.16 2003-Jul-16
+	- guessing expiration date of .RU and .SU domains
+	- howmany_days_passed function removed
+
+0.17 2003-Aug-11
+	- fixed parsing of data from itsyourdomain.com
+
+
 
 0.20 2003-Aug-11
 	- major change for .com .net .org domains:
@@ -18,47 +58,14 @@ Revision history for Perl extension Net::Domain::ExpireDate.
 	    use Net::Domain::ExpireDate qw( $USE_REGISTRAR_SERVERS );
 	    $USE_REGISTRAR_SERVERS = 1;
 
-0.17 2003-Aug-11
-	- fixed parsing of data from itsyourdomain.com
+0.21 2003-Aug-25
+	- new patterns for whois.enom.com by "Ahmed Akef" <akef@aucegypt.edu>
 
-0.16 2003-Jul-16
-	- guessing expiration date of .RU and .SU domains
-	- howmany_days_passed function removed
 
-0.15 2003-Jul-16
-	- not exporting decode_date by default
+0.22 2003-Nov-03
+	- support of new TLDs: .biz, .info and .us
 
-0.14 2003-May-14
-	- more fixes regarding new Net::Whois::Raw
-	  (they have changed the interface!)
-
-0.13 2003-May-11
-	- more fixes regarding new Net::Whois::Raw
-
-0.12 2003-May-11
-	- adopted to new version Net::Whois::Raw
-	  (explicitly importing $OMIT_MSG $CHECK_FAIL)
-
-0.11 2003-Apr-24
-	- fixed parsing of data from whois.ripn.net (for .RU domains)
-
-0.10 2003-Mar-07
-	- fixed parsing of data from whois.ripn.net (for .RU domains)
-
-0.09 2003-Mar-05
-	- fixed decode_date(), now exporting decode_date
-
-0.07 2003-Feb-17
-	- fixed parsing of whois results of whois.ripn.net
-
-0.06 2003-Feb-14
-	- documendation update: added functions reference
-
-0.04 2003-Feb-10
-	- fixed parsing of whois results of whois.networksolutions.com
-
-0.03 2003-Jan-13
-	- fixed parsing of whois results of whois.bulkregister.com
-
-0.01 2002-Oct-02 
-	- original version; created by h2xs 1.21
+0.23 2003-Nov-10
+	- more date recognition templates for .biz domains
+0.25 2004-Mar-25
+	- new patterns for .co.uk domains by Kyrian <kyrian@ore.org>

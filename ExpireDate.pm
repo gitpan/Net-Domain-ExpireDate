@@ -10,7 +10,7 @@ use vars qw(@ISA @EXPORT @EXPORT_OK $VERSION $USE_REGISTRAR_SERVERS);
 @ISA = qw(Exporter);
 @EXPORT = qw( expire_date expdate_fmt expdate_int );
 @EXPORT_OK = qw( decode_date );
-$VERSION = '0.24';
+$VERSION = '0.25';
 
 $USE_REGISTRAR_SERVERS = 0; # Don't make direct queries to registrar server
 
