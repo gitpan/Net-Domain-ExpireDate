@@ -1,5 +1,8 @@
 Revision history for Perl extension Net::Domain::ExpireDate.
 
+0.10 2003-Mar-07
+	- fixed parsing of data from whois.ripn.net (for .RU domains)
+
 0.09 2003-Mar-05
 	- fixed decode_date(), now exporting decode_date
 

@@ -37,7 +37,8 @@ FUNCTIONS
         Extracts expiration date of domain in TLD from "WHOISTEXT". If no
         TLD is given 'com' is the default. There is no distinction between
         'com', 'net' or 'org' TLDs in this function - all of them means
-        gTLD. Also 'ru' TLD is suppored. Returns Time::Piece object.
+        gTLD. Also 'ru' and 'su' TLDs is suppored. Returns Time::Piece
+	object.
 
         With "FORMAT" argument returns date formatted using "FORMAT"
         template (see strftime man page for "FORMAT" specification)

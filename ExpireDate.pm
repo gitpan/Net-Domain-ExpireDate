@@ -11,7 +11,7 @@ use vars qw(@ISA @EXPORT $VERSION);
 @EXPORT = qw(
     expire_date expdate_fmt expdate_int decode_date howmany_days_passed
 );
-$VERSION = '0.09';
+$VERSION = '0.10';
 
 # for Net::Whois::Raw
 $OMIT_MSG = 2;
@@ -47,7 +47,7 @@ sub expdate_int {
     my ($whois, $tld) = @_;
     $tld ||= 'com';
 
-    if ($tld eq 'ru') {
+    if ($tld eq 'ru' || $tld eq 'su') {
 	return expdate_int_ru( $whois );
     } else {
 	return expdate_int_cno( $whois );
@@ -193,6 +193,7 @@ sub expdate_int_ru {
     my @states;
     while ($whois =~ /state:   (.+?)\n/gs) { pushstate(\@states, $1) };
     while ($whois =~ /reg-till: (.+?)\n/gs) { pushstate(\@states, "reg-till: $1") };
+    while ($whois =~ /payed-till: (.+?)\n/gs) { pushstate(\@states, "reg-till: $1") };
     while ($whois =~ /free-date:(.+?)\n/gs) { pushstate(\@states, "free-date: $1") };
     my $res = join( '; ', @states );
 
@@ -305,7 +306,7 @@ See L<strftime> man page for C<FORMAT> specification.
 Extracts expiration date of domain in TLD from C<WHOISTEXT>.
 If no TLD is given 'com' is the default. There is no
 distinction between 'com', 'net' or 'org' TLDs in this function -
-all of them means gTLD. Also 'ru' TLD is suppored.
+all of them means gTLD. Also 'ru' and 'su' TLDs is suppored.
 Returns L<Time::Piece> object.
 
 With C<FORMAT> argument returns date formatted using C<FORMAT> template
