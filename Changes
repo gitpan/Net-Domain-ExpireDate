@@ -1,5 +1,9 @@
 Revision history for Perl extension Net::Domain::ExpireDate.
 
+0.12 2003-May-11
+	- adopted to new version Net::Whois::Raw
+	  (explicitly importing $OMIT_MSG $CHECK_FAIL)
+
 0.11 2003-Apr-24
 	- fixed parsing of data from whois.ripn.net (for .RU domains)
 
