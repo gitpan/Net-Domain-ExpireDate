@@ -190,5 +190,6 @@ Expires on 11/26/2007 23:00:00
 
 [whois.ripn.net]
 reg-till: 2003.09.20
- or
+payed-till: 2003.09.20
+paid-till: 2003.09.20
 state:   Delegated till 2003.10.01

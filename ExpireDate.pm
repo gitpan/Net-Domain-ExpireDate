@@ -11,7 +11,7 @@ use vars qw(@ISA @EXPORT $VERSION);
 @EXPORT = qw(
     expire_date expdate_fmt expdate_int decode_date howmany_days_passed
 );
-$VERSION = '0.10';
+$VERSION = '0.11';
 
 # for Net::Whois::Raw
 $OMIT_MSG = 2;
@@ -194,6 +194,7 @@ sub expdate_int_ru {
     while ($whois =~ /state:   (.+?)\n/gs) { pushstate(\@states, $1) };
     while ($whois =~ /reg-till: (.+?)\n/gs) { pushstate(\@states, "reg-till: $1") };
     while ($whois =~ /payed-till: (.+?)\n/gs) { pushstate(\@states, "reg-till: $1") };
+    while ($whois =~ /paid-till: (.+?)\n/gs) { pushstate(\@states, "reg-till: $1") };
     while ($whois =~ /free-date:(.+?)\n/gs) { pushstate(\@states, "free-date: $1") };
     my $res = join( '; ', @states );
 
