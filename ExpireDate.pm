@@ -17,7 +17,7 @@ use constant FLG_ALL     => 0b1111;
     $USE_REGISTRAR_SERVERS
 );
 @EXPORT_OK = qw( decode_date );
-$VERSION = '0.31';
+$VERSION = '0.32';
 
 $USE_REGISTRAR_SERVERS = 0;
 # 0 - make queries to registry server
@@ -127,12 +127,10 @@ sub domdates_int {
 
     if ($tld eq 'ru' || $tld eq 'su') {
 	return (dates_int_ru( $whois ));
-    } elsif (isin($tld, ['com', 'net', 'org', 'biz', 'info', 'us', 'uk'])) {
+    } else { # 'com', 'net', 'org', 'biz', 'info', 'us', 'uk', 'cc'
 	my $expdate = $flags & FLG_EXPDATE ? expdate_int_cno( $whois ) : undef;
 	my $credate = $flags & FLG_CREDATE ? credate_int_cno( $whois ) : undef;
 	return ($credate, $expdate);
-    } else {
-	return ();
     }
 }
 
@@ -214,7 +212,8 @@ sub expdate_int_cno {
     } elsif ($whois =~ m&(?:Expiry Date|Expire(?:d|s)? on|Valid Date|Expiration Date|Date of expiration)(?:\.*|\s*):?\s+(\d{4})-(\d{2})-(\d{2})&s) {
 	$rulenum = 2.2;	$Y = $1; $m = $2; $d = $3;
     # [whois.oleane.net]		expires:        20030803
-    } elsif ($whois =~ m/expires:\s+(\d{4})(\d{2})(\d{2})/is) {
+    # [whois.nic.it]			expire:      20051011
+    } elsif ($whois =~ m/expires?:\s+(\d{4})(\d{2})(\d{2})/is) {
 	$rulenum = 2.3;	$Y = $1; $m = $2; $d = $3;
     # [whois.dotster.com]		Expires on: 12-DEC-05
     } elsif ($whois =~ m/Expires on: (\d{2})-(\w{3})-(\d{2})/s) {
@@ -296,10 +295,18 @@ sub credate_int_cno {
     # [whois.afilias.info]		Created On:31-Jul-2001 08:42:21 UTC
     if ($whois =~ m/Creat.+?:\s*(\d{2})-(\w{3})-(\d{4})/s) {
 	$rulenum = 1.2;	$d = $1; $b = $2; $Y = $3;
-    # [Querying whois.nic.name]		Created On: 2002-02-08T14:56:54Z
-    } elsif ($whois =~ m/Creat.+?:\s*?(\d{4})[\/-](\d{1,2})[\/-](\d{1,2})/is) {
+    # [whois.nic.name]			Created On: 2002-02-08T14:56:54Z
+    # [whois.worldsite.ws]		Domain created on 2002-10-29 03:54:36
+    } elsif ($whois =~ m/Creat.+?:?\s*?(\d{4})[\/-](\d{1,2})[\/-](\d{1,2})/is) {
 	$rulenum = 2.1;	$Y = $1; $m = $2; $d = $3;
-    } elsif ($whois =~ m/Registration.*?:?\s*\w{3} (\w{3})\s{1,2}(\d{1,2}) \d{2}:\d{2}:\d{2} (\d{4})/is) {
+    # [whois.nic.it]			created:     20000421
+    } elsif ($whois =~ m/created?:\s+(\d{4})(\d{2})(\d{2})/is) {
+	$rulenum = 2.3;	$Y = $1; $m = $2; $d = $3;
+    # [whois.tv]			Record created on Feb 21 2001.
+    } elsif ($whois =~ m/Creat.+?:?\s*(?:\w{3}, )?(\w{3,9})\s{1,2}(\d{1,2}),? (\d{4})/is) {
+	$rulenum = 4.1;	$b = $1; $d = $2; $Y = $3;
+    # [whois.dns.be]			Registered:  Wed Jan 17 2001
+    } elsif ($whois =~ m/Regist.+?:\s*\w{3} (\w{3})\s+(\d{1,2}) (?:\d{2}:\d{2}:\d{2} )?(\d{4})/is) {
 	$rulenum = 4.2;	$b = $1; $d = $2; $Y = $3;
     # [whois.whois.neulevel.biz]	Domain Registration Date: Wed Mar 27 00:01:00 GMT 2002
     } elsif ($whois =~ m/Registration.*?:\s+\w{3} (\w{3}) (\d{2}) (?:\d{2}:\d{2}:\d{2} \w{3}(?:[-+]\d{2}:\d{2})? )?(\d{4})/is) {

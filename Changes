@@ -82,3 +82,6 @@ Revision history for Perl extension Net::Domain::ExpireDate.
 0.31 2005-Feb-26
 	- more creation date patterns;
 	- new exported function: credate_fmt
+
+0.32 2005-Feb-26
+	- more creation date patterns;

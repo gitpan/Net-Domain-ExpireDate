@@ -68,6 +68,9 @@ ok( expdate_fmt("\nstate:    REGISTERED, NOT DELEGATED\nfree-date:2002.10.03\n",
 print "creation date tests\n";
 
 ok( credate_fmt("\nDomain Registration Date:   Wed Mar 27 00:01:00 GMT 2002\n", 'biz'), '2002-03-27' );
+ok( credate_fmt("\nRegistered:  Wed Jan 17 2001\n", 'biz'), '2001-01-17' );
+ok( credate_fmt("\nRecord created on Feb 21 2001.\n", 'biz'), '2001-02-21' );
+ok( credate_fmt("\nDomain created on 2002-10-29 03:54:36\n", 'biz'), '2002-10-29' );
 
 print "domdates tests\n";
 
