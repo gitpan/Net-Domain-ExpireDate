@@ -9,7 +9,7 @@ use vars qw(@ISA @EXPORT $VERSION);
 
 @ISA = qw(Exporter);
 @EXPORT = qw( expire_date expdate_fmt expdate_int howmany_days_passed );
-$VERSION = '0.05';
+$VERSION = '0.06';
 
 # for Net::Whois::Raw
 $OMIT_MSG = 2;

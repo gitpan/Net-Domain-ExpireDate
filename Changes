@@ -1,9 +1,13 @@
-Revision history for Perl extension ExpireDate.
+Revision history for Perl extension Net::Domain::ExpireDate.
 
-0.03  Mon Jan 13 11:11:56 2003
+0.06 2003-Feb-14
+	- documendation update: added functions reference
+
+0.04 2003-Feb-10
+	- fixed parsing of whois results of whois.networksolutions.com
+
+0.03 2003-Jan-13
 	- fixed parsing of whois results of whois.bulkregister.com
 
-0.01  Wed Oct  2 14:40:35 2002
-	- original version; created by h2xs 1.21 with options
-		-A -n ExpireDate
-
+0.01 2002-Oct-02 
+	- original version; created by h2xs 1.21
