@@ -9,7 +9,7 @@ use vars qw(@ISA @EXPORT $VERSION);
 
 @ISA = qw(Exporter);
 @EXPORT = qw( expire_date expdate_fmt expdate_int howmany_days_passed );
-$VERSION = '0.03';
+$VERSION = '0.04';
 
 # for Net::Whois::Raw
 $OMIT_MSG = 2;
@@ -98,7 +98,8 @@ sub expdate_int_cno {
     if ($whois =~ m/(?:Record |Domain )?expire(?:d|s)(?: on\s?)?\.*:?\s+(\d{2})[- ](\w{3})[- ](\d{4})/is) {
 	$rulenum = 1.1;	$d = $1; $b = $2; $Y = $3;
     # [whois.discount-domain.com]	Expiration Date: 02-Aug-2003 22:07:21
-    } elsif ($whois =~ m/Expiration Date: (\d{2})-(\w{3})-(\d{4})/s) {
+    # [?????????????]			Expiration Date:03-Mar-2004 05:00:00 UTC
+    } elsif ($whois =~ m/Expiration Date:\s*(\d{2})-(\w{3})-(\d{4})/s) {
 	$rulenum = 1.2;	$d = $1; $b = $2; $Y = $3;
     # [whois.bulkregister.com]		Record expires on 2003-04-25
     # [whois.bulkregister.com]		Record will be expiring on date: 2003-04-25
@@ -164,7 +165,7 @@ sub expdate_int_cno {
 	warn "Can't recognise date format\n";
 	return undef;
     } else {
-	warn "rulenum: $rulenum\n";
+	#warn "rulenum: $rulenum\n";
     };
 
     my ($fstr, $dstr) = ('', '');
@@ -255,7 +256,6 @@ sub pushstate {
 
 1;
 __END__
-# Below is stub documentation for your module. You better edit it!
 
 =head1 NAME
 

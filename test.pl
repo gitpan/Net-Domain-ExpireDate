@@ -2,7 +2,7 @@
 
 use Test;
 use Data::Dumper;
-BEGIN { plan tests => 47 };
+BEGIN { plan tests => 48 };
 
 use Net::Domain::ExpireDate;
 ok(1); # If we made it this far, we're ok.
@@ -14,6 +14,7 @@ ok( expdate_fmt("\nDomain expires: 24 Oct 2010\n"), '2010-10-24' );
 ok( expdate_fmt("\nRecord expires on........: 03-Jun-2005 EST.\n"), '2005-06-03' );
 ok( expdate_fmt("\nExpires on..............: 24-JAN-2003\n"), '2003-01-24' );
 ok( expdate_fmt("\nExpiration Date: 02-Aug-2003 22:07:21\n"), '2003-08-02' );
+ok( expdate_fmt("\nExpiration Date:03-Mar-2004 05:00:00 UTC\n"), '2004-03-03' );
 ok( expdate_fmt("\nRecord expires on 2003-09-08\n"), '2003-09-08' );
 ok( expdate_fmt("\nRecord expires:       2003-07-29 10:45:05 UTC\n"), '2003-07-29' );
 ok( expdate_fmt("\nexpires:        2003-05-21 10:09:56\n"), '2003-05-21' );
