@@ -10,7 +10,7 @@ use vars qw(@ISA @EXPORT @EXPORT_OK $VERSION $USE_REGISTRAR_SERVERS);
 @ISA = qw(Exporter);
 @EXPORT = qw( expire_date expdate_fmt expdate_int );
 @EXPORT_OK = qw( decode_date );
-$VERSION = '0.21';
+$VERSION = '0.22';
 
 $USE_REGISTRAR_SERVERS = 0; # Don't make direct queries to registrar server
 
@@ -55,7 +55,7 @@ sub expdate_int {
 
     if ($tld eq 'ru' || $tld eq 'su') {
 	return expdate_int_ru( $whois );
-    } elsif ($tld eq 'com' || $tld eq 'net' || $tld eq 'org') {
+    } elsif (isin($tld, ['com', 'net', 'org', 'biz', 'info', 'us'])) {
 	return expdate_int_cno( $whois );
     } else {
 	return undef;
@@ -147,6 +147,11 @@ sub expdate_int_cno {
     # [whois.e-names.org]		Expires after:   Mon Jun  9 23:59:59 2003
     } elsif ($whois =~ m/Expires (?:on|after)\s?\.*:?\s*\w{3} (\w{3})\s{1,2}(\d{1,2}) \d{2}:\d{2}:\d{2} (\d{4})/is) {
 	$rulenum = 4.2;	$b = $1; $d = $2; $Y = $3;
+    # [whois.enom.com]			Expiration date: Fri Sep 21 2012 13:45:09
+    # [whois.enom.com]			Expires: Fri Sep 21 2012 13:45:09
+    # [whois.neulevel.biz]		Domain Expiration Date: Fri Mar 26 23:59:59 GMT 2004
+    } elsif ($whois =~ m/(?:Domain )?(?:Expires|Expiration Date):\s+\w{3} (\w{3}) (\d{2}) (?:\d{2}:\d{2}:\d{2} \w{3} )(\d{4})/is) {
+	$rulenum = 4.3; $b = $1; $d = $2; $Y = $3;
     # [rs.domainbank.net]		Record expires on 10-05-2003 11:21:25 AM
     # [whois.psi-domains.com]
     # [whois.namesecure.com]		Expires on 10-09-2011
@@ -170,10 +175,6 @@ sub expdate_int_cno {
 	$rulenum = 7.2;	$m = $1; $d = $2; $y = $3;
     } elsif ($whois =~ m|Registered through- (\d{2})/(\d{2})/(\d{2})|is) {
 	$rulenum = 7.3; $m = $1; $d = $2; $y = $3;
-    } elsif ($whois =~ m/Expiration date: (\w{3}) (\w{3}) (\d{2}) (\d{4})/is) {
-	$rulenum = 7.4; $b = $2; $d = $3; $Y = $4;
-    } elsif ($whois =~ m/Expires: (\w{3}) (\w{3}) (\d{2}) (\d{4})/is) {
-	$rulenum = 7.5; $b = $2; $d = $3; $Y = $4;
     }
 
     unless ($rulenum) {
@@ -283,6 +284,14 @@ sub pushstate {
     push @{$states}, $state;
 }
 
+sub isin {
+    my ( $val, $arr ) = @_;
+    return '' unless $arr;
+    foreach (@{$arr}) {
+	return 1 if ($_ eq $val);
+    }
+    return 0;
+}
 
 
 1;
@@ -290,8 +299,7 @@ __END__
 
 =head1 NAME
 
-Net::Domain::ExpireDate - Perl extension for obtaining expiration date
-of domain names
+Net::Domain::ExpireDate - obtain expiration date of domain names
 
 =head1 SYNOPSIS
 
@@ -331,8 +339,8 @@ See L<strftime> man page for C<FORMAT> specification.
 
 Extracts expiration date of domain in TLD from C<WHOISTEXT>.
 If no TLD is given 'com' is the default. There is no
-distinction between 'com', 'net' or 'org' TLDs in this function -
-all of them means gTLD. Also 'ru' and 'su' TLDs is suppored.
+distinction between 'com', 'net' or 'org' TLDs in this function.
+Also 'biz', 'info', 'us', 'ru' and 'su' TLDs are suppored.
 Returns L<Time::Piece> object.
 
 With C<FORMAT> argument returns date formatted using C<FORMAT> template

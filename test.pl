@@ -1,9 +1,9 @@
 #!/usr/bin/perl -w
 
-use lib qw(blib/lib);
+use lib qw(.);
 use Test;
 use Data::Dumper;
-BEGIN { plan tests => 48 };
+BEGIN { plan tests => 50 };
 
 use Net::Domain::ExpireDate;
 ok(1); # If we made it this far, we're ok.
@@ -66,3 +66,6 @@ ok( expdate_fmt("\nstate:    REGISTERED, NOT DELEGATED\nfree-date:2002.10.03\n",
 print "The following tests requires internet connection...\n";
 
 ok( expire_date("microsoft.com", '%Y-%m-%d'), '2012-05-03' );
+ok( expire_date("usa.biz", '%Y-%m-%d'), '2005-03-26' );
+ok( expire_date("nic.info", '%Y-%m-%d'), '2011-07-27' );
+ok( expire_date("nic.us", '%Y-%m-%d'), '2007-04-17' );

@@ -1,5 +1,8 @@
 Revision history for Perl extension Net::Domain::ExpireDate.
 
+0.22 2003-Nov-03
+	- support of new TLDs: .biz, .info and .us
+
 0.21 2003-Aug-25
 	- new patterns for whois.enom.com by "Ahmed Akef" <akef@aucegypt.edu>
 
