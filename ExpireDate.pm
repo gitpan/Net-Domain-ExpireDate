@@ -55,9 +55,7 @@ sub expdate_int {
 
     if ($tld eq 'ru' || $tld eq 'su') {
 	return expdate_int_ru( $whois );
-    } elsif ($tld eq 'ua') {
-	return expdate_int_ua( $whois );
-    } elsif (isin($tld, ['com', 'net', 'org', 'biz', 'info', 'us'])) {
+    } elsif (isin($tld, ['com', 'net', 'org', 'biz', 'info', 'us', 'uk'])) {
 	return expdate_int_cno( $whois );
     } else {
 	return undef;
@@ -106,7 +104,8 @@ sub expdate_int_cno {
     # [whois.discount-domain.com]	Expiration Date: 02-Aug-2003 22:07:21
     # [whois.publicinterestregistry.net] Expiration Date:03-Mar-2004 05:00:00 UTC
     # [whois.crsnic.net]		Expiration Date: 21-sep-2004
-    } elsif ($whois =~ m/Expiration Date:\s*(\d{2})-(\w{3})-(\d{4})/s) {
+    # [whois.nic.uk]			Renewal Date:   23-Jan-2006
+    } elsif ($whois =~ m/(?:Expiration|Renewal) Date:\s*(\d{2})-(\w{3})-(\d{4})/s) {
 	$rulenum = 1.2;	$d = $1; $b = $2; $Y = $3;
     # [whois.bulkregister.com]		Record expires on 2003-04-25
     # [whois.bulkregister.com]		Record will be expiring on date: 2003-04-25
@@ -199,7 +198,7 @@ sub expdate_int_cno {
     return decode_date( $dstr, $fstr );
 }
 
-# extract expiration date from whois output for .ru and .su domains
+# extract expiration date from whois output for .ru domains
 sub expdate_int_ru {
     my ($whois) = @_;
     return undef unless $whois;
@@ -284,22 +283,6 @@ sub pushstate {
 	$state =~ /RIPN NCC check completed OK/i
     );
     push @{$states}, $state;
-}
-
-# extract expiration date from whois output for .ua domains
-sub expdate_int_ua {
-    my ($whois) = @_;
-    return undef unless $whois;
-
-    # $Y - The year, including century
-    # $m - The month number (1-12)
-    # $d - The day of month (1-31)
-    my ($rulenum, $Y, $y, $m, $b, $d);
-    if ($whois =~ m/status:\s+OK-UNTIL (\d{4})(\d{2})(\d{2})/is) {
-	$Y = $1; $m = $2; $d = $3;
-	return decode_date( "$Y $m $d", "%Y %m %d" );
-    }
-    return undef;
 }
 
 sub isin {
