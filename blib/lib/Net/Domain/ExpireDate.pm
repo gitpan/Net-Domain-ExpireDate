@@ -4,17 +4,18 @@ require Exporter;
 use strict;
 use Time::Seconds;
 use Time::Piece;
-use Net::Whois::Raw qw(whois $OMIT_MSG $CHECK_FAIL);
+use Net::Whois::Raw qw($OMIT_MSG $CHECK_FAIL);
 use vars qw(@ISA @EXPORT $VERSION);
 
 @ISA = qw(Exporter);
 @EXPORT = qw(
     expire_date expdate_fmt expdate_int decode_date howmany_days_passed
 );
-$VERSION = '0.14';
+$VERSION = '0.13';
 
 # for Net::Whois::Raw
-$OMIT_MSG = 2; $CHECK_FAIL = 2;
+$OMIT_MSG = 2;
+$CHECK_FAIL = 2;
 
 sub expire_date {
     my ($domain, $format) = @_;
@@ -22,7 +23,7 @@ sub expire_date {
     return undef unless ($domain =~ /(.+?)\.([^.]+)$/);
     my ($name, $tld) = ($1, $2);
 
-    my $whois = whois( $domain );
+    my $whois = Net::Whois::Raw::whois( $domain );
 
     if ($format) {
 	return expdate_fmt( $whois, $tld, $format );

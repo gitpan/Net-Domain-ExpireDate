@@ -1,5 +1,9 @@
 Revision history for Perl extension Net::Domain::ExpireDate.
 
+0.14 2003-May-14
+	- more fixes regarding new Net::Whois::Raw
+	  (they have changed the interface!)
+
 0.13 2003-May-11
 	- more fixes regarding new Net::Whois::Raw
 
