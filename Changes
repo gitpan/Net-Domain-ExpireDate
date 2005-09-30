@@ -91,3 +91,10 @@ Revision history for Perl extension Net::Domain::ExpireDate.
 
 0.34 2005-Apr-05
 	- improved obtaining expiration date of .ru domains
+
+0.35 2005-Apr-13
+	- fixed bug with whois queries to .com .net .org registries
+
+0.36 2005-Sep-30
+	- new rule to match .fi domains by Tomi Rekonen <tomi.rekonen@elma.net>
+	- fixed tests at test.pl

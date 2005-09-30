@@ -12,10 +12,11 @@ $USE_REGISTRAR_SERVERS = 2;
 
 ok(1); # If we made it this far, we're ok.
 
-print "expiration date tests\n";
 
-print join ';', domain_dates("infocentr.ru", '%Y-%m-%d'), "\n";
-exit;
+#print join ';', domain_dates("alefclub.com", '%Y-%m-%d'), "\n";
+#print join ';', domain_dates("skyriver.ru", '%Y-%m-%d'), "\n";
+#print join ';', domain_dates("infocentr.ru", '%Y-%m-%d'), "\n";
+#exit;
 
 print " .com .net .org tests\n";
 ok( expdate_fmt("\nRecord expires on 27-Apr-2011.\n"), '2011-04-27' );
@@ -90,5 +91,5 @@ ok( expire_date("nic.info", '%Y-%m-%d'), '2011-07-27' );
 ok( expire_date("nic.us", '%Y-%m-%d'), '2007-04-17' );
 ok( expire_date("orenet.co.uk", '%Y-%m-%d'), '2006-01-23' );
 
-ok( sub { join ';', domain_dates("regtime.net", '%Y-%m-%d') }, '2000-09-06;2005-09-06;' );
-ok( sub { join ';', domain_dates("webnames.ru", '%Y-%m-%d') }, '2001-09-19;2005-09-20;' );
+ok( sub { join ';', domain_dates("regtime.net", '%Y-%m-%d') }, '2000-09-06;2006-09-06;' );
+ok( sub { join ';', domain_dates("webnames.ru", '%Y-%m-%d') }, '2001-09-19;2006-09-20;' );
