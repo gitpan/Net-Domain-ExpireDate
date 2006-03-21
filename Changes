@@ -98,3 +98,6 @@ Revision history for Perl extension Net::Domain::ExpireDate.
 0.36 2005-Sep-30
 	- new rule to match .fi domains by Tomi Rekonen <tomi.rekonen@elma.net>
 	- fixed tests at test.pl
+
+0.37 2006-Mar-20
+	- modify patterns for whois.cira.ca
