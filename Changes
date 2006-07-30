@@ -101,3 +101,6 @@ Revision history for Perl extension Net::Domain::ExpireDate.
 
 0.37 2006-Mar-20
 	- modify patterns for whois.cira.ca
+
+0.38 2006-Oct-30
+	- ducumentation fixes

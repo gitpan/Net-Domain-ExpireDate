@@ -1,7 +1,7 @@
 # http://module-build.sourceforge.net/META-spec.html
 #XXXXXXX This is a prototype!!!  It will change in the future!!! XXXXX#
 name:         Net-Domain-ExpireDate
-version:      0.37
+version:      0.38
 version_from: ExpireDate.pm
 installdirs:  site
 requires:
@@ -9,4 +9,4 @@ requires:
     Time::Piece:                   1
 
 distribution_type: module
-generated_by: ExtUtils::MakeMaker version 6.17
+generated_by: ExtUtils::MakeMaker version 6.30

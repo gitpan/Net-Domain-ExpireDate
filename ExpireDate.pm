@@ -17,7 +17,7 @@ use constant FLG_ALL     => 0b1111;
     $USE_REGISTRAR_SERVERS
 );
 @EXPORT_OK = qw( decode_date );
-$VERSION = '0.37';
+$VERSION = '0.38';
 
 $USE_REGISTRAR_SERVERS = 0;
 # 0 - make queries to registry server
@@ -278,7 +278,7 @@ sub expdate_int_cno {
 }
 
 
-# extract creation date from whois output for .com .net .org domains
+# extract creation date from whois output for .com .net .org .uk domains
 sub credate_int_cno {
     my ($whois) = @_;
     return undef unless $whois;
@@ -444,7 +444,7 @@ See L<strftime> man page for C<FORMAT> specification.
 Extracts expiration date of domain in TLD from C<WHOISTEXT>.
 If no TLD is given 'com' is the default. There is no
 distinction between 'com' or 'net' TLDs in this function.
-Also 'org', 'biz', 'info', 'us', 'ru' and 'su' TLDs are suppored.
+Also 'org', 'biz', 'info', 'us', 'uk', 'ru' and 'su' TLDs are suppored.
 Returns L<Time::Piece> object.
 
 With C<FORMAT> argument returns date formatted using C<FORMAT> template
