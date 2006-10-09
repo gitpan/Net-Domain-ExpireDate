@@ -17,7 +17,7 @@ use constant FLG_ALL     => 0b1111;
     $USE_REGISTRAR_SERVERS
 );
 @EXPORT_OK = qw( decode_date );
-$VERSION = '0.38';
+$VERSION = '0.39';
 
 $USE_REGISTRAR_SERVERS = 0;
 # 0 - make queries to registry server
@@ -255,6 +255,9 @@ sub expdate_int_cno {
 	$rulenum = 7.2;	$m = $1; $d = $2; $y = $3;
     } elsif ($whois =~ m|Registered through- (\d{2})/(\d{2})/(\d{2})|is) {
 	$rulenum = 7.3; $m = $1; $d = $2; $y = $3;
+    # [whois.jprs.jp]                   [....]                      2006/12/31
+    } elsif ($whois =~ m|\[\x1b\x24\x42\x4d\x2d\x38\x7a\x34\x7c\x38\x42\x1b\x28\x42\]\s+(\d{4})/(\d{2})/(\d{2})|s) {
+        $rulenum = 7.4; $Y = $1; $m = $2; $d = $3;
     }
 
     unless ($rulenum) {

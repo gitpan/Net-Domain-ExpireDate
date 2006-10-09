@@ -86,10 +86,11 @@ ok( sub { join ';', domdates_fmt("\ncreated:    2001.09.19\npaid-till:  2005.09.
 print "The following tests requires internet connection and may fail if checked domains were renewed...\n";
 
 ok( expire_date("microsoft.com", '%Y-%m-%d'), '2014-05-03' );
-ok( expire_date("usa.biz", '%Y-%m-%d'), '2006-03-26' );
+ok( expire_date("usa.biz", '%Y-%m-%d'), '2007-03-26' );
 ok( expire_date("nic.info", '%Y-%m-%d'), '2011-07-27' );
 ok( expire_date("nic.us", '%Y-%m-%d'), '2007-04-17' );
-ok( expire_date("orenet.co.uk", '%Y-%m-%d'), '2006-01-23' );
+#ok( expire_date("orenet.co.uk", '%Y-%m-%d'), '2006-01-23' );
+#ok( expire_date("google.jp", '%Y-%m-%d'), '2007-05-31' );
 
-ok( sub { join ';', domain_dates("regtime.net", '%Y-%m-%d') }, '2000-09-06;2006-09-06;' );
-ok( sub { join ';', domain_dates("webnames.ru", '%Y-%m-%d') }, '2001-09-19;2006-09-20;' );
+ok( sub { join ';', domain_dates("regtime.net", '%Y-%m-%d') }, '2000-09-05;2007-09-05;' );
+ok( sub { join ';', domain_dates("webnames.ru", '%Y-%m-%d') }, '2001-09-19;2007-09-20;' );
