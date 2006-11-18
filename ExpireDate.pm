@@ -4,8 +4,8 @@ require Exporter;
 use strict;
 use Time::Seconds;
 use Time::Piece;
-use Net::Whois::Raw qw( get_whois whois $OMIT_MSG $CHECK_FAIL );
-use vars qw(@ISA @EXPORT @EXPORT_OK $VERSION $USE_REGISTRAR_SERVERS);
+use Net::Whois::Raw;
+use vars qw(@ISA @EXPORT @EXPORT_OK $VERSION $USE_REGISTRAR_SERVERS $CACHE_DIR $CACHE_TIME);
 
 use constant FLG_EXPDATE => 0b0001;
 use constant FLG_CREDATE => 0b0010;
@@ -17,16 +17,17 @@ use constant FLG_ALL     => 0b1111;
     $USE_REGISTRAR_SERVERS
 );
 @EXPORT_OK = qw( decode_date );
-$VERSION = '0.39';
+$VERSION = '0.40';
 
-$USE_REGISTRAR_SERVERS = 0;
+$Net::Whois::Raw::USE_REGISTRAR_SERVERS = 0;
 # 0 - make queries to registry server
 # 1 - make queries to registrar server
-# 2 - make queries to registrar server
-#     and in case of fault make query to registry server
+# 2 - make queries to registrar server and in case of fault make query to registry server
 
 # for Net::Whois::Raw
-$OMIT_MSG = 2; $CHECK_FAIL = 3;
+$Net::Whois::Raw::OMIT_MSG = 2;
+$Net::Whois::Raw::CHECK_FAIL = 3;
+
 
 sub expire_date {
     my ($domain, $format) = @_;
@@ -46,14 +47,16 @@ sub expire_date {
 sub domain_dates {
     my ($domain, $format) = @_;
 
+    _config_netwhoisraw();
+
     return undef unless ($domain =~ /(.+?)\.([^.]+)$/);
     my ($name, $tld) = (lc $1, lc $2);
 
     my $whois;
     if (isin($tld, ['com', 'net', 'org'])) {
-	$whois = get_whois( $domain, undef, 'QRY_FIRST' );
+	$whois = Net::Whois::Raw::whois( $domain, undef, 'QRY_FIRST' );
     } else {
-	$whois = whois( $domain );
+	$whois = Net::Whois::Raw::whois( $domain );
     }
 
     if ($format) {
@@ -68,10 +71,12 @@ sub domain_dates {
 sub expire_date_query {
     my ($domain, $format, $via_registry) = @_;
 
+    _config_netwhoisraw();
+
     return undef unless ($domain =~ /(.+?)\.([^.]+)$/);
     my ($name, $tld) = (lc $1, lc $2);
 
-    my $whois = get_whois( $domain, undef, $via_registry ? 'QRY_FIRST' : 'QRY_LAST' );
+    my $whois = Net::Whois::Raw::whois( $domain, undef, $via_registry ? 'QRY_FIRST' : 'QRY_LAST' );
 
     if ($format) {
 	return expdate_fmt( $whois, $tld, $format );
@@ -132,8 +137,6 @@ sub expdate_int {
     return $exp_date;
 }
 
-# --- internal functions ----
-
 sub decode_date {
     my ($date, $format) = @_;
     return undef unless $date;
@@ -147,6 +150,13 @@ sub decode_date {
     }
 
     return $t;
+}
+
+# --- internal functions ----
+
+sub _config_netwhoisraw {
+    $Net::Whois::Raw::CACHE_DIR = $CACHE_DIR if $CACHE_DIR;
+    $Net::Whois::Raw::CACHE_TIME = $CACHE_TIME if $CACHE_TIME;
 }
 
 # extract expiration date from whois output for .com .net .org domains

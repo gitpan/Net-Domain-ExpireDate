@@ -108,3 +108,7 @@ Revision history for Perl extension Net::Domain::ExpireDate.
 0.39 2006-Oct-09
 	- added support for .JP domains
 	- fixed tests
+
+0.40 2006-Nov-18
+	- new module config variables: $CACHE_TIME and $CACHE_DIR,
+	  this config passes to Net::Whois::Raw
