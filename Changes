@@ -112,3 +112,6 @@ Revision history for Perl extension Net::Domain::ExpireDate.
 0.40 2006-Nov-18
 	- new module config variables: $CACHE_TIME and $CACHE_DIR,
 	  this config passes to Net::Whois::Raw
+
+0.41 2007-May-16
+	- patch for understanding .biz and .cn by Yulia Shtyrjakova

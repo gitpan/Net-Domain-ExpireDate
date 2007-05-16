@@ -17,7 +17,7 @@ use constant FLG_ALL     => 0b1111;
     $USE_REGISTRAR_SERVERS
 );
 @EXPORT_OK = qw( decode_date );
-$VERSION = '0.40';
+$VERSION = '0.41';
 
 $Net::Whois::Raw::USE_REGISTRAR_SERVERS = 0;
 # 0 - make queries to registry server
@@ -185,7 +185,8 @@ sub expdate_int_cno {
     # [whois.publicinterestregistry.net] Expiration Date:03-Mar-2004 05:00:00 UTC
     # [whois.crsnic.net]		Expiration Date: 21-sep-2004
     # [whois.nic.uk]			Renewal Date:   23-Jan-2006
-    } elsif ($whois =~ m/(?:Expiration|Renewal) Date:\s*(\d{2})-(\w{3})-(\d{4})/is) {
+    # [whois.aero]			Expires On:18-May-2008 01:53:51 UTC
+    } elsif ($whois =~ m/(?:Expi\w+|Renewal) (?:Date|On):\s*(\d{2})-(\w{3})-(\d{4})/is) {
 	$rulenum = 1.2;	$d = $1; $b = $2; $Y = $3;
     # [whois.bulkregister.com]		Record expires on 2003-04-25
     # [whois.bulkregister.com]		Record will be expiring on date: 2003-04-25
@@ -302,15 +303,15 @@ sub credate_int_cno {
     # $b - The month name
     # $d - The day of month (1-31)
     my ($rulenum, $Y, $y, $m, $b, $d);
-
     # [whois.crsnic.net]		Creation Date: 06-sep-2000
     # [whois.afilias.info]		Created On:31-Jul-2001 08:42:21 UTC
     # [whois.enom.com]			Creation date: 11 Jun 2004 14:22:48
-    if ($whois =~ m/Creat.+?:\s*(\d{2})[- ](\w{3})[- ](\d{4})/s) {
+    if ($whois =~ m/Creat(?:ion|ed On)[^:]*?:\s*(\d{2})[- ](\w{3})[- ](\d{4})/is) {
 	$rulenum = 1.2;	$d = $1; $b = $2; $Y = $3;
     # [whois.nic.name]			Created On: 2002-02-08T14:56:54Z
     # [whois.worldsite.ws]		Domain created on 2002-10-29 03:54:36
-    } elsif ($whois =~ m/Creat.+?:?\s*?(\d{4})[\/-](\d{1,2})[\/-](\d{1,2})/is) {
+    # [..cn]				Registration Date: 2003-03-19 08:06
+    } elsif ($whois =~ m/(?:Creat.+?|Registration Date):?\s*?(\d{4})[\/-](\d{1,2})[\/-](\d{1,2})/is) {
 	$rulenum = 2.1;	$Y = $1; $m = $2; $d = $3;
     # [whois.nic.it]			created:     20000421
     } elsif ($whois =~ m/created?:\s+(\d{4})(\d{2})(\d{2})/is) {
