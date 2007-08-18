@@ -115,3 +115,6 @@ Revision history for Perl extension Net::Domain::ExpireDate.
 
 0.41 2007-May-16
 	- patch for understanding .biz and .cn by Yulia Shtyrjakova
+
+0.42 2007-Aug-15
+	- updated POD documentstion (subroutines descriptions)

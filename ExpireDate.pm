@@ -17,7 +17,7 @@ use constant FLG_ALL     => 0b1111;
     $USE_REGISTRAR_SERVERS
 );
 @EXPORT_OK = qw( decode_date );
-$VERSION = '0.41';
+$VERSION = '0.42';
 
 $Net::Whois::Raw::USE_REGISTRAR_SERVERS = 0;
 # 0 - make queries to registry server
@@ -414,7 +414,7 @@ __END__
 
 =head1 NAME
 
-Net::Domain::ExpireDate - obtain expiration date of domain names
+Net::Domain::ExpireDate -- obtain expiration date of domain names
 
 =head1 SYNOPSIS
 
@@ -428,6 +428,12 @@ Net::Domain::ExpireDate - obtain expiration date of domain names
  ($creation_obj, $expiration_obj) = domain_dates( 'microsoft.com' );
  ($creation_str, $expiration_str) = domain_dates( 'microsoft.com', '%Y-%m-%d' );
  ($creation_obj, $expiration_obj) = domdates_int( $whois_text, 'com' );
+
+=head1 ABSTRACT
+
+C<Apache2::ModSSL> adds 2 functions to the C<Apache2::Connection> class.
+C<is_https()> returns true if the connection SSL-encrypted.
+C<ssl_var_lookup()> is used to query more detailed information.
 
 =head1 DESCRIPTION
 
@@ -472,19 +478,25 @@ See L<strftime> man page for C<FORMAT> specification.
 
 =item domain_dates( DOMAIN [,FORMAT] )
 
-Returns list of two values - creation and expiration date of C<DOMAIN>.
+Returns list of two values -- creation and expiration date of C<DOMAIN>.
 Without C<FORMAT> argument returns L<Time::Piece> objects.
 With C<FORMAT> argument dates are formatted using C<FORMAT> template.
 See L<strftime> man page for C<FORMAT> specification.
 
-=item domdates_int( WHOISTEXT [,TLD] )
+=item domdates_int( WHOISTEXT [,TLD [,FLAGS]] )
 
-Returns list of two values - creation and expiration date of domain
-extracted from C<WHOISTEXT>.
+Returns list of three values -- creation, expiration and
+free date of domain extracted from C<WHOISTEXT>.
 If no TLD is given 'com' is the default. There is no
 distinction between 'com' or 'net' TLDs in this function.
 Also 'org', 'biz', 'info', 'us', 'ru' and 'su' TLDs are suppored.
 Returns L<Time::Piece> object.
+
+=item domdates_fmt( WHOISTEXT [,TLD [,FORMAT [,FLAGS]]] )
+
+The same as domdates_int, except it returns formatted results
+instead of Time::Piece objects.
+
 
 =back
 
