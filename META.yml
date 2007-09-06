@@ -1,11 +1,12 @@
 # http://module-build.sourceforge.net/META-spec.html
 #XXXXXXX This is a prototype!!!  It will change in the future!!! XXXXX#
 name:         Net-Domain-ExpireDate
-version:      0.42
+version:      0.80
 version_from: ExpireDate.pm
 installdirs:  site
 requires:
-    Net::Whois::Raw:               0
+    Net::Whois::Raw:               1.3
+    Test::More:                    0.5
     Time::Piece:                   1
 
 distribution_type: module

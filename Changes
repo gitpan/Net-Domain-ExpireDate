@@ -118,3 +118,8 @@ Revision history for Perl extension Net::Domain::ExpireDate.
 
 0.42 2007-Aug-15
 	- updated POD documentstion (subroutines descriptions)
+
+0.80 2007-Sep-06
+	- added support for cretion dates for *.(com|net|org|pp).ru domains
+	- don't use Exporter anymore; revised export list (can cause some incompatibilities, so version number bumped)
+	- user Test::More for tests; tests revised

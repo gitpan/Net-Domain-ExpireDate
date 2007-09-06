@@ -1,23 +1,23 @@
 package Net::Domain::ExpireDate;
-require Exporter;
 
 use strict;
 use Time::Seconds;
 use Time::Piece;
 use Net::Whois::Raw;
-use vars qw(@ISA @EXPORT @EXPORT_OK $VERSION $USE_REGISTRAR_SERVERS $CACHE_DIR $CACHE_TIME);
 
 use constant FLG_EXPDATE => 0b0001;
 use constant FLG_CREDATE => 0b0010;
 use constant FLG_ALL     => 0b1111;
 
-@ISA = qw(Exporter);
-@EXPORT = qw(
+our @EXPORT = qw(
     expire_date expdate_int expdate_fmt credate_fmt domain_dates domdates_fmt
     $USE_REGISTRAR_SERVERS
 );
-@EXPORT_OK = qw( decode_date );
-$VERSION = '0.42';
+
+our $VERSION = '0.80';
+our $USE_REGISTRAR_SERVERS;
+our $CACHE_DIR;
+our $CACHE_TIME;
 
 $Net::Whois::Raw::USE_REGISTRAR_SERVERS = 0;
 # 0 - make queries to registry server
@@ -313,6 +313,9 @@ sub credate_int_cno {
     # [..cn]				Registration Date: 2003-03-19 08:06
     } elsif ($whois =~ m/(?:Creat.+?|Registration Date):?\s*?(\d{4})[\/-](\d{1,2})[\/-](\d{1,2})/is) {
 	$rulenum = 2.1;	$Y = $1; $m = $2; $d = $3;
+    # [whois.org.ru] created: 2006.12.16
+    } elsif ($whois =~ m/created:\s+(\d{4})\.(\d{2})\.(\d{2})/is) {
+	$rulenum = 2.2;	$Y = $1; $m = $2; $d = $3;
     # [whois.nic.it]			created:     20000421
     } elsif ($whois =~ m/created?:\s+(\d{4})(\d{2})(\d{2})/is) {
 	$rulenum = 2.3;	$Y = $1; $m = $2; $d = $3;
@@ -408,6 +411,16 @@ sub isin {
     return 0;
 }
 
+sub import {
+    my $mypkg = shift;
+    my $callpkg = caller;
+
+    no strict 'refs';
+
+    # export subs
+    *{"$callpkg\::$_"} = \&{"$mypkg\::$_"} foreach ((@EXPORT, @_));
+}
+
 
 1;
 __END__
@@ -430,12 +443,6 @@ Net::Domain::ExpireDate -- obtain expiration date of domain names
  ($creation_obj, $expiration_obj) = domdates_int( $whois_text, 'com' );
 
 =head1 ABSTRACT
-
-C<Apache2::ModSSL> adds 2 functions to the C<Apache2::Connection> class.
-C<is_https()> returns true if the connection SSL-encrypted.
-C<ssl_var_lookup()> is used to query more detailed information.
-
-=head1 DESCRIPTION
 
 Net::Domain::ExpireDate gets WHOIS information of given domain using
 Net::Whois::Raw and tries to obtain expiration date of domain.
