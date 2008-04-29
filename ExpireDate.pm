@@ -14,12 +14,12 @@ our @EXPORT = qw(
     $USE_REGISTRAR_SERVERS
 );
 
-our $VERSION = '0.80';
+our $VERSION = '0.90';
 our $USE_REGISTRAR_SERVERS;
 our $CACHE_DIR;
 our $CACHE_TIME;
 
-$Net::Whois::Raw::USE_REGISTRAR_SERVERS = 0;
+$USE_REGISTRAR_SERVERS = 0;
 # 0 - make queries to registry server
 # 1 - make queries to registrar server
 # 2 - make queries to registrar server and in case of fault make query to registry server

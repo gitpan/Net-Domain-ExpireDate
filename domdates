@@ -1,0 +1,25 @@
+#!/usr/bin/perl -w
+# domdates
+#
+# DESCRIPTION
+#   Get domain creation / expiration dates for given domains
+#
+# AUTHORS
+#   Walery Studennikov <despair@cpan.org>
+#
+#========================================================================
+
+use strict;
+use IO::Handle;
+use Net::Domain::ExpireDate;
+
+autoflush STDOUT 1;
+
+my @domnames = @ARGV;
+
+foreach my $domain (@domnames) {
+    print "$domain...\n";
+    my ($creation_str, $expiration_str) = domain_dates( $domain, '%Y-%m-%d' );
+    print "\tcreated: $creation_str\n";
+    print "\texpires: $expiration_str\n\n";
+}

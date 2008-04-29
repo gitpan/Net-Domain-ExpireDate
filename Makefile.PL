@@ -10,8 +10,8 @@ WriteMakefile(
 				'Time::Piece' => 1,
 				'Net::Whois::Raw' => 1.30,
 				'Test::More' => 0.50,
+				'Getopt::Long' => 1.00,
 			   },
     ($] >= 5.005 ?    ## Add these new keywords supported since 5.005
-      (ABSTRACT_FROM => 'ExpireDate.pm', # retrieve abstract from module
-       AUTHOR     => 'Walery Studennikov <despair@regtime.net>') : ()),
+      (AUTHOR     => 'Walery Studennikov <despair@cpan.org>') : ()),
 );
