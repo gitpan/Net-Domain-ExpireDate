@@ -125,3 +125,6 @@ Revision history for Perl extension Net::Domain::ExpireDate.
 0.90 2008-Apr-29	Walery Studennikov
 	- added domdates script
 	- updated Makefile.PL and MANIFEST
+
+0.91 2008-Jul-02	Matsui Shinsuke
+	- added support for .AC domains

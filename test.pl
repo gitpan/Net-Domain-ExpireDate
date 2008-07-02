@@ -4,7 +4,7 @@ use strict;
 use lib qw(.);
 use Test::More;
 use Data::Dumper;
-BEGIN { plan tests => 59 };
+BEGIN { plan tests => 61 };
 
 use Net::Domain::ExpireDate;
 
@@ -62,6 +62,7 @@ is( expdate_fmt("\nRecord will be expiring on date: 2003-04-25\n"), '2003-04-25'
 is( expdate_fmt("\nRecord expiring on -  2003-04-25\n"), '2003-04-25' );
 is( expdate_fmt("\nRecord will expire on -  2003-04-25\n"), '2003-04-25' );
 is( expdate_fmt("\nRecord will be expiring on date: 2003-04-25\n"), '2003-04-25' );
+is( expdate_fmt("\nExpires : January 27 2019.\n"), '2019-01-27' );
 
 print ".ru tests\n";
 is( expdate_fmt("\nstate:   Delegated till 2003.10.01\nstate:   RIPN NCC check completed OK\n", 'ru'), '2003-10-01' );
@@ -74,6 +75,7 @@ is( credate_fmt("\nDomain Registration Date:   Wed Mar 27 00:01:00 GMT 2002\n", 
 is( credate_fmt("\nRegistered:  Wed Jan 17 2001\n", 'biz'), '2001-01-17' );
 is( credate_fmt("\nRecord created on Feb 21 2001.\n", 'biz'), '2001-02-21' );
 is( credate_fmt("\nDomain created on 2002-10-29 03:54:36\n", 'biz'), '2002-10-29' );
+is( credate_fmt("\nCreated : September 10 1999.\n", 'ac'), '1999-09-10' );
 
 print "domdates tests\n";
 

@@ -14,7 +14,7 @@ our @EXPORT = qw(
     $USE_REGISTRAR_SERVERS
 );
 
-our $VERSION = '0.90';
+our $VERSION = '0.91';
 our $USE_REGISTRAR_SERVERS;
 our $CACHE_DIR;
 our $CACHE_TIME;
@@ -229,7 +229,8 @@ sub expdate_int_cno {
     # [whois.registrar.aol.com]		Expires on..............: Oct  5 2002 12:00AM
     # [whois.itsyourdomain.com]		Record expires on March 06, 2011
     # [whois.doregi.com]		Record expires on.......: Oct  28, 2011
-    } elsif ($whois =~ m/(?:Record )?expires on\.*:? (?:\w{3}, )?(\w{3,9})\s{1,2}(\d{1,2}),? (\d{4})/is) {
+    # [www.nic.ac]		Expires : January 27 2019.
+    } elsif ($whois =~ m/(?:Record )?expires (?:on)?\.*:? (?:\w{3}, )?(\w{3,9})\s{1,2}(\d{1,2}),? (\d{4})/is) {
 	$rulenum = 4.1;	$b = $1; $d = $2; $Y = $3;
     # [whois.domainpeople.com]		Expires on .............WED NOV 16 09:09:52 2011
     # [whois.e-names.org]		Expires after:   Mon Jun  9 23:59:59 2003
