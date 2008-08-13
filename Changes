@@ -128,3 +128,6 @@ Revision history for Perl extension Net::Domain::ExpireDate.
 
 0.91 2008-Jul-02	Matsui Shinsuke
 	- added support for .AC domains
+
+0.92 2008-Aug-02	dhiggins
+	- cira, the canadian domain authority (whois.cira.ca) changed their date format

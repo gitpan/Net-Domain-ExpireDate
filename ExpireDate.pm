@@ -14,7 +14,7 @@ our @EXPORT = qw(
     $USE_REGISTRAR_SERVERS
 );
 
-our $VERSION = '0.91';
+our $VERSION = '0.92';
 our $USE_REGISTRAR_SERVERS;
 our $CACHE_DIR;
 our $CACHE_TIME;
@@ -212,8 +212,8 @@ sub expdate_int_cno {
     # [whois.enetregistry.net]		Expiration Date     : 2002-11-19 04:18:25-05
     # [whois.enterprice.net]		Date of expiration  : 2003-05-28 11:50:58
     # [nswhois.domainregistry.com]	Expires on..............: 2006-07-24
-    # [whois.cira.ca]			Renewal-Date:   2006/10/27
-    } elsif ($whois =~ m&(?:Expiry Date|Expire(?:d|s)? on|Valid Date|Expiration Date|Date of expiration|Renewal-Date)(?:\.*|\s*):?\s+(\d{4})[/-](\d{2})[/-](\d{2})&s) {
+    # [whois.cira.ca]			Renewal date:   2006/10/27
+    } elsif ($whois =~ m&(?:Expiry Date|Expire(?:d|s)? on|Valid Date|Expiration Date|Date of expiration|Renewal[- ][Dd]ate)(?:\.*|\s*):?\s+(\d{4})[/-](\d{2})[/-](\d{2})&s) {
 	$rulenum = 2.2;	$Y = $1; $m = $2; $d = $3;
     # [whois.oleane.net]		expires:        20030803
     # [whois.nic.it]			expire:      20051011
