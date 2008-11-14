@@ -14,7 +14,7 @@ our @EXPORT = qw(
     $USE_REGISTRAR_SERVERS
 );
 
-our $VERSION = '0.92';
+our $VERSION = '0.93';
 our $USE_REGISTRAR_SERVERS;
 our $CACHE_DIR;
 our $CACHE_TIME;
@@ -223,7 +223,8 @@ sub expdate_int_cno {
     } elsif ($whois =~ m/expires?:\s+(\d{1,2}).(\d{1,2}).(\d{4})/is) {
         $rulenum = 2.4; $Y = $3; $m = $2; $d = $1;
     # [whois.dotster.com]		Expires on: 12-DEC-05
-    } elsif ($whois =~ m/Expires on: (\d{2})-(\w{3})-(\d{2})/s) {
+    # [whois for domain rosemount.com] Expires on..............: 26-Oct-15
+    } elsif ($whois =~ m/Expires on\.*: (\d{2})-(\w{3})-(\d{2})/s) {
 	$rulenum = 3;	$d = $1; $b = $2; $y = $3;
     # [whois.register.com]		Expires on..............: Tue, Aug 04, 2009
     # [whois.registrar.aol.com]		Expires on..............: Oct  5 2002 12:00AM
@@ -307,7 +308,8 @@ sub credate_int_cno {
     # [whois.crsnic.net]		Creation Date: 06-sep-2000
     # [whois.afilias.info]		Created On:31-Jul-2001 08:42:21 UTC
     # [whois.enom.com]			Creation date: 11 Jun 2004 14:22:48
-    if ($whois =~ m/Creat(?:ion|ed On)[^:]*?:\s*(\d{2})[- ](\w{3})[- ](\d{4})/is) {
+    # [whois for domain ibm.com] Record created on 19-Mar-1986.
+    if ($whois =~ m/Creat(?:ion|ed On)[^:]*?:?\s*(\d{2})[- ](\w{3})[- ](\d{4})/is) {
 	$rulenum = 1.2;	$d = $1; $b = $2; $Y = $3;
     # [whois.nic.name]			Created On: 2002-02-08T14:56:54Z
     # [whois.worldsite.ws]		Domain created on 2002-10-29 03:54:36

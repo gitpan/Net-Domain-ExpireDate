@@ -131,3 +131,7 @@ Revision history for Perl extension Net::Domain::ExpireDate.
 
 0.92 2008-Aug-02	dhiggins
 	- cira, the canadian domain authority (whois.cira.ca) changed their date format
+
+0.93 2008-Nov-14	ivan baktsheev + Walery Studennikov
+	- added support for some old .com domains (as example, intel.com) / ivan baktsheev
+	- reorder directory structure, add Build.PL / Walery Studennikov

@@ -4,7 +4,7 @@ use strict;
 use lib qw(.);
 use Test::More;
 use Data::Dumper;
-BEGIN { plan tests => 61 };
+BEGIN { plan tests => 63 };
 
 use Net::Domain::ExpireDate;
 
@@ -95,3 +95,6 @@ like( expire_date("nic.us", '%Y-%m-%d'), qr(20\d\d-04-17) );
 
 like( join( ';', domain_dates("godaddy.com", '%Y-%m-%d') ), qr(1999-03-02;201\d-03-02;) );
 like( join( ';', domain_dates("reg.ru", '%Y-%m-%d') ), qr(2005-11-01;200\d-11-01;) );
+
+like( join( ';', domain_dates("ibm.com", '%Y-%m-%d') ), qr(1986-03-19;20\d\d-03-20;) );
+like( join( ';', domain_dates("intel.com", '%Y-%m-%d') ), qr(1986-03-25;20\d\d-03-26;) );
