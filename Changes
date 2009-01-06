@@ -135,3 +135,6 @@ Revision history for Perl extension Net::Domain::ExpireDate.
 0.93 2008-Nov-14	ivan baktsheev + Walery Studennikov
 	- added support for some old .com domains (as example, intel.com) / ivan baktsheev
 	- reorder directory structure, add Build.PL / Walery Studennikov
+
+0.94 2009-Jan-06	Walery Studennikov
+	- fix regexp for rule #1.1

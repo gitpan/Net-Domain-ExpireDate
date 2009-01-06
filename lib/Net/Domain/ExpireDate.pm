@@ -14,7 +14,7 @@ our @EXPORT = qw(
     $USE_REGISTRAR_SERVERS
 );
 
-our $VERSION = '0.93';
+our $VERSION = '0.94';
 our $USE_REGISTRAR_SERVERS;
 our $CACHE_DIR;
 our $CACHE_TIME;
@@ -179,7 +179,7 @@ sub expdate_int_cno {
     # [whois.ibi.net]			Record expires on........: 03-Jun-2005 EST.
     # [whois.gkg.net]			Expires on..............: 24-JAN-2003
     # [whois.enom.com]			Expiration date: 11 Jun 2005 14:22:48
-    if ($whois =~ m/expir.+?:?\s+(\d{2})[- ](\w{3})[- ](\d{4})/is) {
+    if ($whois =~ m/\sexpir.+?:?\s+(\d{2})[- ](\w{3})[- ](\d{4})/is) {
 	$rulenum = 1.1;	$d = $1; $b = $2; $Y = $3;
     # [whois.discount-domain.com]	Expiration Date: 02-Aug-2003 22:07:21
     # [whois.publicinterestregistry.net] Expiration Date:03-Mar-2004 05:00:00 UTC

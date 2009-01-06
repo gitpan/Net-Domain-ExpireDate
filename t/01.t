@@ -86,12 +86,12 @@ is( join( ';', domdates_fmt("\ncreated:    2001.09.19\npaid-till:  2005.09.20\n"
 
 print "The following tests requires internet connection and may fail if checked domains were renewed...\n";
 
-like( expire_date("microsoft.com", '%Y-%m-%d'), qr(201\d-05-03) );
-like( expire_date("usa.biz", '%Y-%m-%d'), qr(20\d\d-03-26) );
-like( expire_date("nic.info", '%Y-%m-%d'), qr(201\d-07-27) );
-like( expire_date("nic.us", '%Y-%m-%d'), qr(20\d\d-04-17) );
-#like( expire_date("orenet.co.uk", '%Y-%m-%d'), /2006-01-23/ );
-#like( expire_date("google.jp", '%Y-%m-%d'), /2007-05-31/ );
+like( expire_date('microsoft.com', '%Y-%m-%d'), qr(201\d-05-03) );
+like( expire_date('usa.biz', '%Y-%m-%d'), qr(20\d\d-03-26) );
+like( expire_date('nic.info', '%Y-%m-%d'), qr(201\d-07-27) );
+like( expire_date('nic.us', '%Y-%m-%d'), qr(20\d\d-04-17) );
+#like( expire_date('orenet.co.uk', '%Y-%m-%d'), /2006-01-23/ );
+#like( expire_date('google.jp', '%Y-%m-%d'), /2007-05-31/ );
 
 like( join( ';', domain_dates("godaddy.com", '%Y-%m-%d') ), qr(1999-03-02;201\d-03-02;) );
 like( join( ';', domain_dates("reg.ru", '%Y-%m-%d') ), qr(2005-11-01;200\d-11-01;) );
