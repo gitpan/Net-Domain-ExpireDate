@@ -14,7 +14,7 @@ our @EXPORT = qw(
     $USE_REGISTRAR_SERVERS
 );
 
-our $VERSION = '0.94';
+our $VERSION = '0.95';
 our $USE_REGISTRAR_SERVERS;
 our $CACHE_DIR;
 our $CACHE_TIME;
@@ -255,6 +255,11 @@ sub expdate_int_cno {
     # [whois.belizenic.bz]		Expiration Date..: 15-01-2005 12:00:00
     } elsif ($whois =~ m&Expiration Date.+?(\d{2})-(\d{2})-(\d{4}) \d{2}:\d{2}:\d{2}&is) {
 	$rulenum = 5.3;	$d = $1; $m = $2; $Y = $3;
+    # edit for .uk domains: Adam McGreggor <cpan[...]amyl.org.uk>;
+    # kudos on a typo to <ganesh[...]urchin.earth.li>, via irc.mysociety.org
+    # [whois.nic.uk] Registered on: 21-Oct-2003
+    } elsif ($whois =~ m&Registered on.+?(\d{2})-(\w{3})-(\d{4})&is) {
+	$rulenum = 5.4; $d = $1; $b = $2; $Y = $3;
     # [whois.nordnet.net]		Record expires on 2010-Apr-03
     # [whois.alldomains.com]		Expires on..............: 2006-Jun-12
     } elsif ($whois =~ m/(?:Record |Domain )?expires on\.*:? (\d{4})-(\w{3})-(\d{2})/is) {
