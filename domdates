@@ -11,11 +11,24 @@
 
 use strict;
 use IO::Handle;
+use Getopt::Long;
 use Net::Domain::ExpireDate;
 
-autoflush STDOUT 1;
+my $use_registrar_servers;
+
+# ------ CMDLINE PROCESSING -------
+
+GetOptions(
+    'use_registrar_servers|R=i'	=> \$use_registrar_servers,
+);
+
+if (defined $use_registrar_servers) {
+    $Net::Domain::ExpireDate::USE_REGISTRAR_SERVERS = $use_registrar_servers
+}
 
 my @domnames = @ARGV;
+
+# ------ EXECUTE -------
 
 foreach my $domain (@domnames) {
     print "$domain...\n";

@@ -6,6 +6,7 @@ my $build = Module::Build->new(
     module_name => 'Net::Domain::ExpireDate',
     license  => 'perl',
     requires => {
+	'Getopt::Long' => '2',
 	'Net::Whois::Raw' => 1.0,
 	'Time::Piece' => 0,
     },

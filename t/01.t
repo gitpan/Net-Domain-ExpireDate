@@ -2,13 +2,12 @@
 
 use strict;
 use lib qw(.);
+
 use Test::More;
 use Data::Dumper;
-BEGIN { plan tests => 63 };
-
 use Net::Domain::ExpireDate;
 
-$Net::Domain::ExpireDate::USE_REGISTRAR_SERVERS = 2;
+BEGIN { plan tests => 64 };
 
 ok(1); # If we made it this far, we're ok.
 
@@ -81,10 +80,13 @@ print "domdates tests\n";
 
 is( join( ';', domdates_fmt("\nCreation Date: 06-sep-2000\nExpiration Date: 06-sep-2005\n") ), '2000-09-06;2005-09-06;' );
 is( join( ';', domdates_fmt("\ncreated:    2001.09.19\npaid-till:  2005.09.20\n", 'ru') ), '2001-09-19;2005-09-20;' );
+is( join( ';', domdates_fmt("\nCreated on..............: Mon, Nov 12, 2007\n      Expires on..............: Tue, Mar 26, 2013\n") ), '2007-11-12;2013-03-26;', 'domdates_fmt' );
 
 # online tests
 
 print "The following tests requires internet connection and may fail if checked domains were renewed...\n";
+
+$Net::Domain::ExpireDate::USE_REGISTRAR_SERVERS = 2;
 
 like( expire_date('microsoft.com', '%Y-%m-%d'), qr(201\d-05-03) );
 like( expire_date('usa.biz', '%Y-%m-%d'), qr(20\d\d-03-26) );
@@ -93,8 +95,12 @@ like( expire_date('nic.us', '%Y-%m-%d'), qr(20\d\d-04-17) );
 #like( expire_date('orenet.co.uk', '%Y-%m-%d'), /2006-01-23/ );
 #like( expire_date('google.jp', '%Y-%m-%d'), /2007-05-31/ );
 
+$Net::Domain::ExpireDate::USE_REGISTRAR_SERVERS = 0;
 like( join( ';', domain_dates("godaddy.com", '%Y-%m-%d') ), qr(1999-03-02;201\d-03-02;) );
+$Net::Domain::ExpireDate::USE_REGISTRAR_SERVERS = 2;
+
+
 like( join( ';', domain_dates("reg.ru", '%Y-%m-%d') ), qr(2005-11-01;200\d-11-01;) );
 
 like( join( ';', domain_dates("ibm.com", '%Y-%m-%d') ), qr(1986-03-19;20\d\d-03-20;) );
-like( join( ';', domain_dates("intel.com", '%Y-%m-%d') ), qr(1986-03-25;20\d\d-03-26;) );
+like( join( ';', domain_dates("intel.com", '%Y-%m-%d') ), qr(2007-11-12;20\d\d-03-26;) );

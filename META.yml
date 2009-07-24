@@ -1,6 +1,6 @@
 ---
 name: Net-Domain-ExpireDate
-version: 0.95
+version: 0.96
 author:
   - 'Walery Studennikov, <despair@cpan.org>'
 abstract: 'Net::Domain::ExpireDate -- obtain expiration date of domain names'
@@ -8,13 +8,14 @@ license: perl
 resources:
   license: http://dev.perl.org/licenses/
 requires:
+  Getopt::Long: 2
   Net::Whois::Raw: 1
   Time::Piece: 0
 provides:
   Net::Domain::ExpireDate:
     file: lib/Net/Domain/ExpireDate.pm
-    version: 0.95
-generated_by: Module::Build version 0.280801
+    version: 0.96
+generated_by: Module::Build version 0.32
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.2.html
   version: 1.2

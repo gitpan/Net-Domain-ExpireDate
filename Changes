@@ -138,3 +138,6 @@ Revision history for Perl extension Net::Domain::ExpireDate.
 
 0.94 2009-Jan-06	Walery Studennikov
 	- fix regexp for rule #1.1
+
+0.96 2009-Jul-24	Walery Studennikov
+	- consider $USE_REGISTRAR_SERVERS in domain_dates function

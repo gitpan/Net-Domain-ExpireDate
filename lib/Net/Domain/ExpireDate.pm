@@ -14,7 +14,8 @@ our @EXPORT = qw(
     $USE_REGISTRAR_SERVERS
 );
 
-our $VERSION = '0.95';
+our $VERSION = '0.96';
+
 our $USE_REGISTRAR_SERVERS;
 our $CACHE_DIR;
 our $CACHE_TIME;
@@ -40,7 +41,7 @@ sub expire_date {
 	return expire_date_query( $domain, $format, 0 )
 	    || expire_date_query( $domain, $format, 1 );
     }
-    
+
     return undef;
 }
 
@@ -53,18 +54,23 @@ sub domain_dates {
     my ($name, $tld) = (lc $1, lc $2);
 
     my $whois;
-    if (isin($tld, ['com', 'net', 'org'])) {
+
+    if ($USE_REGISTRAR_SERVERS == 0) {
 	$whois = Net::Whois::Raw::whois( $domain, undef, 'QRY_FIRST' );
-    } else {
-	$whois = Net::Whois::Raw::whois( $domain );
+    } elsif ($USE_REGISTRAR_SERVERS == 1) {
+	$whois = Net::Whois::Raw::whois( $domain, undef, 'QRY_LAST' );
+    } elsif ($USE_REGISTRAR_SERVERS == 2) {
+	$whois = Net::Whois::Raw::whois( $domain, undef, 'QRY_LAST' )
+	       || Net::Whois::Raw::whois( $domain, undef, 'QRY_FIRST' )
     }
 
     if ($format) {
 	return (domdates_fmt( $whois, $tld, $format ));
-    } else {
+    }
+    else {
 	return (domdates_int( $whois, $tld ));
     }
-    
+
     return undef;
 }
 
@@ -224,6 +230,7 @@ sub expdate_int_cno {
         $rulenum = 2.4; $Y = $3; $m = $2; $d = $1;
     # [whois.dotster.com]		Expires on: 12-DEC-05
     # [whois for domain rosemount.com] Expires on..............: 26-Oct-15
+    # [whois.godaddy.com]		Expires on: 02-Mar-16
     } elsif ($whois =~ m/Expires on\.*: (\d{2})-(\w{3})-(\d{2})/s) {
 	$rulenum = 3;	$d = $1; $b = $2; $y = $3;
     # [whois.register.com]		Expires on..............: Tue, Aug 04, 2009
@@ -235,7 +242,8 @@ sub expdate_int_cno {
 	$rulenum = 4.1;	$b = $1; $d = $2; $Y = $3;
     # [whois.domainpeople.com]		Expires on .............WED NOV 16 09:09:52 2011
     # [whois.e-names.org]		Expires after:   Mon Jun  9 23:59:59 2003
-    } elsif ($whois =~ m/Expires (?:on|after)\s?\.*:?\s*\w{3} (\w{3})\s{1,2}(\d{1,2}) \d{2}:\d{2}:\d{2} (\d{4})/is) {
+    # [whois.corporatedomains.com]	Created on..............: Mon, Nov 12, 2007
+    } elsif ($whois =~ m/(?:Created|Expires) (?:on|after)\s?\.*:?\s*\w{3},? (\w{3})\s{1,2}(\d{1,2})(?: \d{2}:\d{2}:\d{2})? (\d{4})?/is) {
 	$rulenum = 4.2;	$b = $1; $d = $2; $Y = $3;
     # [whois.enom.com]			Expiration date: Fri Sep 21 2012 13:45:09
     # [whois.enom.com]			Expires: Fri Sep 21 2012 13:45:09
