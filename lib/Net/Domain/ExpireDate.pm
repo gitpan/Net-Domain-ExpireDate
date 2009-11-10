@@ -14,7 +14,7 @@ our @EXPORT = qw(
     $USE_REGISTRAR_SERVERS
 );
 
-our $VERSION = '0.96';
+our $VERSION = '0.97';
 
 our $USE_REGISTRAR_SERVERS;
 our $CACHE_DIR;

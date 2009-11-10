@@ -141,3 +141,6 @@ Revision history for Perl extension Net::Domain::ExpireDate.
 
 0.96 2009-Jul-24	Walery Studennikov
 	- consider $USE_REGISTRAR_SERVERS in domain_dates function
+
+0.97 2009-Nov-10	Walery Studennikov
+	- tests fixed

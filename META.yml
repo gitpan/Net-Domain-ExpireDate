@@ -1,6 +1,6 @@
 ---
 name: Net-Domain-ExpireDate
-version: 0.96
+version: 0.97
 author:
   - 'Walery Studennikov, <despair@cpan.org>'
 abstract: 'Net::Domain::ExpireDate -- obtain expiration date of domain names'
@@ -11,11 +11,13 @@ requires:
   Getopt::Long: 2
   Net::Whois::Raw: 1
   Time::Piece: 0
+configure_requires:
+  Module::Build: 0.35
 provides:
   Net::Domain::ExpireDate:
     file: lib/Net/Domain/ExpireDate.pm
-    version: 0.96
-generated_by: Module::Build version 0.32
+    version: 0.97
+generated_by: Module::Build version 0.35
 meta-spec:
-  url: http://module-build.sourceforge.net/META-spec-v1.2.html
-  version: 1.2
+  url: http://module-build.sourceforge.net/META-spec-v1.4.html
+  version: 1.4

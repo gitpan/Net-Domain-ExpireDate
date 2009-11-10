@@ -88,7 +88,7 @@ print "The following tests requires internet connection and may fail if checked 
 
 $Net::Domain::ExpireDate::USE_REGISTRAR_SERVERS = 2;
 
-like( expire_date('microsoft.com', '%Y-%m-%d'), qr(201\d-05-03) );
+like( expire_date('microsoft.com', '%Y-%m-%d'), qr(201\d-05-04) );
 like( expire_date('usa.biz', '%Y-%m-%d'), qr(20\d\d-03-26) );
 like( expire_date('nic.info', '%Y-%m-%d'), qr(201\d-07-27) );
 like( expire_date('nic.us', '%Y-%m-%d'), qr(20\d\d-04-17) );
@@ -100,7 +100,7 @@ like( join( ';', domain_dates("godaddy.com", '%Y-%m-%d') ), qr(1999-03-02;201\d-
 $Net::Domain::ExpireDate::USE_REGISTRAR_SERVERS = 2;
 
 
-like( join( ';', domain_dates("reg.ru", '%Y-%m-%d') ), qr(2005-11-01;200\d-11-01;) );
+like( join( ';', domain_dates("reg.ru", '%Y-%m-%d') ), qr(2005-11-01;201\d-11-01;) );
 
 like( join( ';', domain_dates("ibm.com", '%Y-%m-%d') ), qr(1986-03-19;20\d\d-03-20;) );
 like( join( ';', domain_dates("intel.com", '%Y-%m-%d') ), qr(2007-11-12;20\d\d-03-26;) );
