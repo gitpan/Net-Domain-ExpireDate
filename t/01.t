@@ -7,6 +7,9 @@ use Test::More;
 use Data::Dumper;
 use Net::Domain::ExpireDate;
 
+use POSIX;
+setlocale( &POSIX::LC_TIME, "en_US.UTF-8" );
+
 BEGIN { plan tests => 64 };
 
 ok(1); # If we made it this far, we're ok.
@@ -43,7 +46,9 @@ is( expdate_fmt("\nexpires:        20030803\n"), '2003-08-03' );
 is( expdate_fmt("\nExpires on: 12-DEC-05\n"), '2005-12-12' );
 is( expdate_fmt("\nExpires on..............: Tue, Aug 04, 2009\n"), '2009-08-04' );
 is( expdate_fmt("\nExpires on..............: Oct  5 2002 12:00AM\n"), '2002-10-05' );
+
 is( expdate_fmt("\nRecord expires on December 05, 2004\n"), '2004-12-05' );
+
 is( expdate_fmt("\nRecord expires on.......: Oct  28, 2011\n"), '2011-10-28' );
 is( expdate_fmt("\nExpires on .............WED NOV 16 09:09:52 2011\n"), '2011-11-16' );
 is( expdate_fmt("\nExpires after:   Mon Jun  9 23:59:59 2003\n"), '2003-06-09' );
@@ -61,6 +66,7 @@ is( expdate_fmt("\nRecord will be expiring on date: 2003-04-25\n"), '2003-04-25'
 is( expdate_fmt("\nRecord expiring on -  2003-04-25\n"), '2003-04-25' );
 is( expdate_fmt("\nRecord will expire on -  2003-04-25\n"), '2003-04-25' );
 is( expdate_fmt("\nRecord will be expiring on date: 2003-04-25\n"), '2003-04-25' );
+
 is( expdate_fmt("\nExpires : January 27 2019.\n"), '2019-01-27' );
 
 print ".ru tests\n";
@@ -74,6 +80,7 @@ is( credate_fmt("\nDomain Registration Date:   Wed Mar 27 00:01:00 GMT 2002\n", 
 is( credate_fmt("\nRegistered:  Wed Jan 17 2001\n", 'biz'), '2001-01-17' );
 is( credate_fmt("\nRecord created on Feb 21 2001.\n", 'biz'), '2001-02-21' );
 is( credate_fmt("\nDomain created on 2002-10-29 03:54:36\n", 'biz'), '2002-10-29' );
+
 is( credate_fmt("\nCreated : September 10 1999.\n", 'ac'), '1999-09-10' );
 
 print "domdates tests\n";

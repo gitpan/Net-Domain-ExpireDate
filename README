@@ -23,6 +23,8 @@ DESCRIPTION
     are covered). Now obtaining of domain creation date is also supported.
 
     "$date" in synopsis is an object of type Time::Piece.
+    
+    Note: some operations need a specific set of LC_TIME locale (en_US).
 
 FUNCTIONS
     expire_date( DOMAIN [,FORMAT] )

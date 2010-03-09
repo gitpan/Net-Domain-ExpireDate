@@ -14,7 +14,7 @@ our @EXPORT = qw(
     $USE_REGISTRAR_SERVERS
 );
 
-our $VERSION = '0.97';
+our $VERSION = '0.98';
 
 our $USE_REGISTRAR_SERVERS;
 our $CACHE_DIR;
@@ -297,7 +297,16 @@ sub expdate_int_cno {
     $fstr .= $Y ? '%Y ' : '%y ';
     $dstr .= $Y ? "$Y " : "$y ";
 
-    $fstr .= $b ? '%b ' : '%m ';
+    if ( $b && length $b > 3 ) {
+	$fstr .= '%B ';
+    }
+    elsif ( $b && length $b == 3 ) {
+	$fstr .= '%b ';
+    }
+    else {
+	$fstr .= '%m ';
+    }
+    
     $dstr .= $b ? "$b " : "$m ";
 
     $fstr .= '%d';
@@ -360,8 +369,17 @@ sub credate_int_cno {
     my ($fstr, $dstr) = ('', '');
     $fstr .= $Y ? '%Y ' : '%y ';
     $dstr .= $Y ? "$Y " : "$y ";
-
-    $fstr .= $b ? '%b ' : '%m ';
+    
+    if ( $b && length $b > 3 ) {
+	$fstr .= '%B ';
+    }
+    elsif ( $b && length $b == 3 ) {
+	$fstr .= '%b ';
+    }
+    else {
+	$fstr .= '%m ';
+    }
+    
     $dstr .= $b ? "$b " : "$m ";
 
     $fstr .= '%d';
