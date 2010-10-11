@@ -147,3 +147,6 @@ Revision history for Perl extension Net::Domain::ExpireDate.
 	
 0.98 2010-Mar-2		Alexander Ponomarev
 	- fixed some tests
+
+0.99 2010-Oct-11	Timur Nozadze
+	- fixed some tests
