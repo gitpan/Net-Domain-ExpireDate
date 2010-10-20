@@ -14,7 +14,7 @@ our @EXPORT = qw(
     $USE_REGISTRAR_SERVERS
 );
 
-our $VERSION = '0.99';
+our $VERSION = '1.00';
 
 our $USE_REGISTRAR_SERVERS;
 our $CACHE_DIR;
@@ -127,7 +127,7 @@ sub domdates_int {
     $tld ||= 'com';
     $flags ||= FLG_ALL;
 
-    if ($tld eq 'ru' || $tld eq 'su') {
+    if (isin( $tld, ['ru', 'su', 'xn--p1ai'] )) {
 	return (dates_int_ru( $whois ));
     } else { # 'com', 'net', 'org', 'biz', 'info', 'us', 'uk', 'cc'
 	my $expdate = $flags & FLG_EXPDATE ? expdate_int_cno( $whois ) : undef;

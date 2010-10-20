@@ -150,3 +150,6 @@ Revision history for Perl extension Net::Domain::ExpireDate.
 
 0.99 2010-Oct-11	Timur Nozadze
 	- fixed some tests
+
+1.00 2010-Oct-20	Walery Studennikov
+	- suports .xn--p1ai domains
