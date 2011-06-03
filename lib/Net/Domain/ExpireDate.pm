@@ -14,7 +14,7 @@ our @EXPORT = qw(
     $USE_REGISTRAR_SERVERS
 );
 
-our $VERSION = '1.00';
+our $VERSION = '1.01';
 
 our $USE_REGISTRAR_SERVERS;
 our $CACHE_DIR;
@@ -269,8 +269,9 @@ sub expdate_int_cno {
     } elsif ($whois =~ m&Registered on.+?(\d{2})-(\w{3})-(\d{4})&is) {
 	$rulenum = 5.4; $d = $1; $b = $2; $Y = $3;
     # [whois.nordnet.net]		Record expires on 2010-Apr-03
+    # [whois.nic.nu]			Record created on 1999-Apr-5.
     # [whois.alldomains.com]		Expires on..............: 2006-Jun-12
-    } elsif ($whois =~ m/(?:Record |Domain )?expires on\.*:? (\d{4})-(\w{3})-(\d{2})/is) {
+    } elsif ($whois =~ m/(?:Record |Domain )?expires on\.*:? (\d{4})-(\w{3})-(\d{1,2})/is) {
 	$rulenum = 6;	$Y = $1; $b = $2; $d = $3;
     # [whois.enom.com]			Expiration date: 09/21/03 13:45:09
     } elsif ($whois =~ m|Expiration date: (\d{2})/(\d{2})/(\d{2})|s) {

@@ -10,7 +10,7 @@ use Net::Domain::ExpireDate;
 use POSIX;
 setlocale( &POSIX::LC_TIME, "en_US.UTF-8" );
 
-BEGIN { plan tests => 64 };
+BEGIN { plan tests => 65 };
 
 ok(1); # If we made it this far, we're ok.
 
@@ -58,6 +58,7 @@ is( expdate_fmt("\nRecord Expires on 08-24-2011\n"), '2011-08-24' );
 is( expdate_fmt("\nExpiration: 6/3/2004\n"), '2004-06-03' );
 is( expdate_fmt("\nExpires on 11/26/2007 23:00:00\n"), '2007-11-26' );
 is( expdate_fmt("\nRecord expires on 2010-Apr-03\n"), '2010-04-03' );
+is( expdate_fmt("\nRecord expires on 2012-Apr-5.\n"), '2012-04-05' );
 is( expdate_fmt("\nExpires on..............: 2006-Jun-12\n"), '2006-06-12' );
 is( expdate_fmt("\nExpiration date: 09/21/03 13:45:09\n"), '2003-09-21' );
 # whois.bulkregister.com can give expiration date in different formats
