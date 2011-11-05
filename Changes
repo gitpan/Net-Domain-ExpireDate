@@ -156,3 +156,6 @@ Revision history for Perl extension Net::Domain::ExpireDate.
 
 1.01 2011-Jun-03	Walery Studennikov
 	- added support for .nu domains
+
+1.02 2011-Nov-05	Walery Studennikov
+	- fixed some tests
