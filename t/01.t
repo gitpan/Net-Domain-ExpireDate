@@ -10,7 +10,7 @@ use Net::Domain::ExpireDate;
 use POSIX;
 setlocale( &POSIX::LC_TIME, "en_US.UTF-8" );
 
-BEGIN { plan tests => 65 };
+BEGIN { plan tests => 70 };
 
 ok(1); # If we made it this far, we're ok.
 
@@ -69,6 +69,10 @@ is( expdate_fmt("\nRecord will expire on -  2003-04-25\n"), '2003-04-25' );
 is( expdate_fmt("\nRecord will be expiring on date: 2003-04-25\n"), '2003-04-25' );
 
 is( expdate_fmt("\nExpires : January 27 2019.\n"), '2019-01-27' );
+is( expdate_fmt("\nexpires:      September  5 2012\n"), '2012-09-05' );
+is( expdate_fmt("\nDomain Expiration Date:29-Apr-2013 17:53:03 UTC\n"), '2013-04-29' );
+
+is( expdate_fmt("\nstatus:     OK-UNTIL 20130104013013\n"), '2013-01-04' );
 
 print ".ru tests\n";
 is( expdate_fmt("\nstate:   Delegated till 2003.10.01\nstate:   RIPN NCC check completed OK\n", 'ru'), '2003-10-01' );
@@ -83,6 +87,9 @@ is( credate_fmt("\nRecord created on Feb 21 2001.\n", 'biz'), '2001-02-21' );
 is( credate_fmt("\nDomain created on 2002-10-29 03:54:36\n", 'biz'), '2002-10-29' );
 
 is( credate_fmt("\nCreated : September 10 1999.\n", 'ac'), '1999-09-10' );
+is( credate_fmt('\nDomain Create Date:29-Apr-2008 17:53:03 UTC\n'), '2008-04-29' );
+
+is( credate_fmt("\ncreated:    0-UANIC 20130104013013\n"), '2013-01-04' );
 
 print "domdates tests\n";
 
@@ -101,7 +108,7 @@ like( expire_date('usa.biz', '%Y-%m-%d'), qr(20\d\d-03-26) );
 like( expire_date('nic.info', '%Y-%m-%d'), qr(201\d-07-27) );
 like( expire_date('nic.us', '%Y-%m-%d'), qr(20\d\d-04-17) );
 #like( expire_date('orenet.co.uk', '%Y-%m-%d'), /2006-01-23/ );
-#like( expire_date('google.jp', '%Y-%m-%d'), /2007-05-31/ );
+#is( expire_date('nic.jp', '%Y-%m-%d'), '2013-07-31' );
 
 $Net::Domain::ExpireDate::USE_REGISTRAR_SERVERS = 0;
 like( join( ';', domain_dates("godaddy.com", '%Y-%m-%d') ), qr(1999-03-02;202\d-11-01;) );

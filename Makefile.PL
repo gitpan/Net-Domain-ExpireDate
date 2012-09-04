@@ -2,15 +2,15 @@
 use ExtUtils::MakeMaker;
 WriteMakefile
 (
-  'PL_FILES' => {},
-  'INSTALLDIRS' => 'site',
   'NAME' => 'Net::Domain::ExpireDate',
-  'EXE_FILES' => [],
   'VERSION_FROM' => 'lib/Net/Domain/ExpireDate.pm',
   'PREREQ_PM' => {
                    'Getopt::Long' => '2',
                    'Net::Whois::Raw' => '1',
                    'Time::Piece' => 0
-                 }
+                 },
+  'INSTALLDIRS' => 'site',
+  'EXE_FILES' => [],
+  'PL_FILES' => {}
 )
 ;
