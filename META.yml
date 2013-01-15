@@ -1,25 +1,24 @@
 ---
-abstract: 'Net::Domain::ExpireDate -- obtain expiration date of domain names'
+abstract: unknown
 author:
   - unknown
-build_requires: {}
+build_requires:
+  ExtUtils::MakeMaker: 0
 configure_requires:
-  Module::Build: 0.4
+  ExtUtils::MakeMaker: 0
 dynamic_config: 1
-generated_by: 'Module::Build version 0.4, CPAN::Meta::Converter version 2.120921'
-license: perl
+generated_by: 'ExtUtils::MakeMaker version 6.62, CPAN::Meta::Converter version 2.120921'
+license: unknown
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
   version: 1.4
 name: Net-Domain-ExpireDate
-provides:
-  Net::Domain::ExpireDate:
-    file: lib/Net/Domain/ExpireDate.pm
-    version: 1.09
+no_index:
+  directory:
+    - t
+    - inc
 requires:
   Getopt::Long: 2
   Net::Whois::Raw: 1
   Time::Piece: 0
-resources:
-  license: http://dev.perl.org/licenses/
-version: 1.09
+version: 1.10
