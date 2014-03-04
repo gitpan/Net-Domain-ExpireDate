@@ -10,7 +10,7 @@ use Net::Domain::ExpireDate;
 use POSIX;
 setlocale( &POSIX::LC_TIME, "en_US.UTF-8" );
 
-BEGIN { plan tests => 70 };
+BEGIN { plan tests => 71 };
 
 ok(1); # If we made it this far, we're ok.
 
@@ -73,6 +73,7 @@ is( expdate_fmt("\nexpires:      September  5 2012\n"), '2012-09-05' );
 is( expdate_fmt("\nDomain Expiration Date:29-Apr-2013 17:53:03 UTC\n"), '2013-04-29' );
 
 is( expdate_fmt("\nstatus:     OK-UNTIL 20130104013013\n"), '2013-01-04' );
+is( expdate_fmt("\nExpiry : 2017-01-25\n"), '2017-01-25' );
 
 print ".ru tests\n";
 is( expdate_fmt("\nstate:   Delegated till 2003.10.01\nstate:   RIPN NCC check completed OK\n", 'ru'), '2003-10-01' );
@@ -117,5 +118,5 @@ $Net::Domain::ExpireDate::USE_REGISTRAR_SERVERS = 2;
 
 like( join( ';', domain_dates("reg.ru", '%Y-%m-%d') ), qr(2005-11-01;201\d-11-01;) );
 
-like( join( ';', domain_dates("ibm.com", '%Y-%m-%d') ), qr(1986-03-19;20\d\d-03-21;) );
+like( join( ';', domain_dates("ibm.com", '%Y-%m-%d') ), qr(1986-03-19;20\d\d-03-20;) );
 like( join( ';', domain_dates("intel.com", '%Y-%m-%d') ), qr(1986-03-25;20\d\d-03-26;) );

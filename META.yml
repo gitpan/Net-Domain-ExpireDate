@@ -1,23 +1,24 @@
---- #YAML:1.0
-name:               Net-Domain-ExpireDate
-version:            1.11
-abstract:           ~
-author:  []
-license:            unknown
-distribution_type:  module
-configure_requires:
-    ExtUtils::MakeMaker:  0
+---
+abstract: unknown
+author:
+  - unknown
 build_requires:
-    ExtUtils::MakeMaker:  0
-requires:
-    Getopt::Long:     2
-    Net::Whois::Raw:  1
-    Time::Piece:      0
-no_index:
-    directory:
-        - t
-        - inc
-generated_by:       ExtUtils::MakeMaker version 6.57_05
+  ExtUtils::MakeMaker: 0
+configure_requires:
+  ExtUtils::MakeMaker: 0
+dynamic_config: 1
+generated_by: 'ExtUtils::MakeMaker version 6.78, CPAN::Meta::Converter version 2.120351'
+license: unknown
 meta-spec:
-    url:      http://module-build.sourceforge.net/META-spec-v1.4.html
-    version:  1.4
+  url: http://module-build.sourceforge.net/META-spec-v1.4.html
+  version: 1.4
+name: Net-Domain-ExpireDate
+no_index:
+  directory:
+    - t
+    - inc
+requires:
+  Getopt::Long: 2
+  Net::Whois::Raw: 1
+  Time::Piece: 0
+version: 1.12

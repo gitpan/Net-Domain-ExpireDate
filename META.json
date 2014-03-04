@@ -1,22 +1,33 @@
 {
-   "abstract" : "Net::Domain::ExpireDate -- obtain expiration date of domain names",
+   "abstract" : "unknown",
    "author" : [
       "unknown"
    ],
    "dynamic_config" : 1,
-   "generated_by" : "Module::Build version 0.4003, CPAN::Meta::Converter version 2.120921",
+   "generated_by" : "ExtUtils::MakeMaker version 6.78, CPAN::Meta::Converter version 2.120351",
    "license" : [
-      "perl_5"
+      "unknown"
    ],
    "meta-spec" : {
       "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
       "version" : "2"
    },
    "name" : "Net-Domain-ExpireDate",
+   "no_index" : {
+      "directory" : [
+         "t",
+         "inc"
+      ]
+   },
    "prereqs" : {
+      "build" : {
+         "requires" : {
+            "ExtUtils::MakeMaker" : "0"
+         }
+      },
       "configure" : {
          "requires" : {
-            "Module::Build" : "0.40"
+            "ExtUtils::MakeMaker" : "0"
          }
       },
       "runtime" : {
@@ -27,17 +38,6 @@
          }
       }
    },
-   "provides" : {
-      "Net::Domain::ExpireDate" : {
-         "file" : "lib/Net/Domain/ExpireDate.pm",
-         "version" : "1.10"
-      }
-   },
    "release_status" : "stable",
-   "resources" : {
-      "license" : [
-         "http://dev.perl.org/licenses/"
-      ]
-   },
-   "version" : "1.10"
+   "version" : "1.12"
 }
