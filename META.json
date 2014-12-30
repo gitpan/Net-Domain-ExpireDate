@@ -4,7 +4,7 @@
       "unknown"
    ],
    "dynamic_config" : 1,
-   "generated_by" : "ExtUtils::MakeMaker version 6.66, CPAN::Meta::Converter version 2.133380",
+   "generated_by" : "ExtUtils::MakeMaker version 7.04, CPAN::Meta::Converter version 2.143240",
    "license" : [
       "unknown"
    ],
@@ -39,5 +39,12 @@
       }
    },
    "release_status" : "stable",
+   "resources" : {
+      "repository" : {
+         "type" : "git",
+         "url" : "https://github.com/regru/Net-Domain-ExpireDate.git",
+         "web" : "https://github.com/regru/Net-Domain-ExpireDate"
+      }
+   },
    "version" : "1.15"
 }
